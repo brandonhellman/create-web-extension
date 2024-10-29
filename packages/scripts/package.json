@@ -6,7 +6,7 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
-    "webext-dev": "./dist/index.js"
+    "browser-ext": "./dist/index.js"
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
