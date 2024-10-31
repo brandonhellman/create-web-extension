@@ -1,14 +1,14 @@
 import path from "path";
 import { type Configuration } from "webpack";
-import { getWebExtension } from "./getWebExtension";
+import { getBrowserExt } from "./getBrowserExt";
 
 export async function getConfig(
   mode: "development" | "production"
 ): Promise<Configuration> {
-  const webExtension = await getWebExtension();
+  const browserExt = await getBrowserExt();
 
   const config = {
-    entry: webExtension.entries,
+    entry: browserExt.entries,
 
     module: {
       rules: [

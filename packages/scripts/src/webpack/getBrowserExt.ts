@@ -10,7 +10,7 @@ interface Plugins {
   [key: string]: any;
 }
 
-export async function getWebExtension() {
+export async function getBrowserExt() {
   const entries: Entries = {};
   const plugins: Plugins[] = [];
 
