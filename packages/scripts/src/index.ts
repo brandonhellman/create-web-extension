@@ -4,7 +4,8 @@ import { program } from "commander";
 
 import { name, version } from "../package.json";
 import { build } from "./scripts/build";
-import { watch } from "./scripts/watch";
+import { start } from "./scripts/start";
+import { zip } from "./scripts/zip";
 
 // Setup the program
 program.name(name).version(version, "-v, --version").usage("<script> [option]");
@@ -17,12 +18,20 @@ program
     build();
   });
 
-// Add the watch command
+// Add the start command
 program
-  .command("watch")
-  .description("Watch the web extension for changes and rebuild.")
+  .command("start")
+  .description("Start the web extension in development mode.")
   .action(() => {
-    watch();
+    start();
+  });
+
+// Add the zip command
+program
+  .command("zip")
+  .description("Zip the web extension for distribution.")
+  .action(() => {
+    zip();
   });
 
 // Parse the arguments
