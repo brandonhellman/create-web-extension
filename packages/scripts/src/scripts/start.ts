@@ -1,8 +1,8 @@
 import { webpack } from "webpack";
 import { getConfig } from "../webpack/getConfig";
 
-export async function watch() {
-  console.log("Watching...");
+export async function start() {
+  console.log("Starting...");
 
   const config = await getConfig("development");
 
