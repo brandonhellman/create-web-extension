@@ -12,7 +12,6 @@ export const pathToPackage = {
   /*
   templates: {
     react: resolveToPackage("/templates/react/"),
-    reactTypescript: resolveToPackage("/templates/react-typescript/"),
     typescript: resolveToPackage("/templates/typescript/"),
     gitignore: resolveToPackage("/templates/.gitignore"),
     readme: resolveToPackage("/templates/README.md"),
