@@ -14,10 +14,14 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "generate-json-webpack-plugin": "^2.0.0",
     "webpack": "^5.95.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
+    "@types/fs-extra": "^11.0.4",
+    "@types/generate-json-webpack-plugin": "^0.3.7",
     "tsup": "^8.3.5",
     "typescript": "latest"
   }
