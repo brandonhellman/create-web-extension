@@ -3,7 +3,7 @@ import { program } from 'commander';
 
 import { name, version } from '../package.json';
 import { build } from './scripts/build';
-import { start } from './scripts/start';
+import { dev } from './scripts/dev';
 
 // Setup the program
 program.name(name).version(version, '-v, --version').usage('<script> [option]');
@@ -18,10 +18,10 @@ program
 
 // Add the start command
 program
-  .command('start')
+  .command('dev')
   .description('Start the web extension in development mode.')
   .action(() => {
-    start();
+    dev();
   });
 
 // Parse the arguments

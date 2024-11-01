@@ -1,3 +1,3 @@
 export async function build() {
-  console.log('Building...');
+  console.log('Running build...');
 }
