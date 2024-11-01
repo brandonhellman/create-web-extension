@@ -1,10 +1,11 @@
-import { webpack } from "webpack";
-import { getConfig } from "../webpack/getConfig";
+import { webpack } from 'webpack';
+
+import { getConfig } from '../webpack/getConfig';
 
 export async function start() {
-  console.log("Starting...");
+  console.log('Starting...');
 
-  const config = await getConfig("development");
+  const config = await getConfig('development');
 
   webpack(config).watch(
     {
@@ -18,7 +19,7 @@ export async function start() {
       }
 
       if (!stats) {
-        console.error("No stats returned");
+        console.error('No stats returned');
         return;
       }
 
@@ -35,6 +36,6 @@ export async function start() {
       }
 
       console.log(`Built in ${info.time}ms`);
-    }
+    },
   );
 }

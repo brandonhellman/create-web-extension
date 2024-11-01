@@ -1,5 +1,5 @@
-import fs from "fs-extra";
-import path from "path";
+import path from 'path';
+import fs from 'fs-extra';
 
 // Resolve the path to the browser extension (the working directory)
 function resolveToBrowserExt(relativePath: string) {
@@ -7,10 +7,10 @@ function resolveToBrowserExt(relativePath: string) {
 }
 
 export const pathToBrowserExt = {
-  root: resolveToBrowserExt("."),
-  manifestJson: resolveToBrowserExt("manifest.json"),
-  packageJson: resolveToBrowserExt("package.json"),
-  tsconfigJson: resolveToBrowserExt("tsconfig.json"),
-  build: resolveToBrowserExt("/build"),
-  unpacked: resolveToBrowserExt("/build/unpacked/"),
+  root: resolveToBrowserExt('.'),
+  manifestJson: resolveToBrowserExt('manifest.json'),
+  packageJson: resolveToBrowserExt('package.json'),
+  tsconfigJson: resolveToBrowserExt('tsconfig.json'),
+  build: resolveToBrowserExt('/build'),
+  unpacked: resolveToBrowserExt('/build/unpacked/'),
 };

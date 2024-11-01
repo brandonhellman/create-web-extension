@@ -1,10 +1,9 @@
-import path from "path";
-import { type Configuration } from "webpack";
-import { getBrowserExt } from "./getBrowserExt";
+import path from 'path';
+import { type Configuration } from 'webpack';
 
-export async function getConfig(
-  mode: "development" | "production"
-): Promise<Configuration> {
+import { getBrowserExt } from './getBrowserExt';
+
+export async function getConfig(mode: 'development' | 'production'): Promise<Configuration> {
   const browserExt = await getBrowserExt();
 
   const config = {
@@ -14,33 +13,33 @@ export async function getConfig(
       rules: [
         {
           test: /\.(ts|tsx)$/,
-          use: "ts-loader",
+          use: 'ts-loader',
           exclude: /node_modules/,
         },
       ],
     },
 
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".jsx", ".css"],
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
     },
 
     output: {
-      path: path.resolve(__dirname, "dist"),
+      path: path.resolve(__dirname, 'dist'),
     },
   };
 
-  if (mode === "development") {
+  if (mode === 'development') {
     return {
       ...config,
-      mode: "development",
-      devtool: "inline-source-map",
+      mode: 'development',
+      devtool: 'inline-source-map',
       plugins: [],
     };
   }
 
   return {
     ...config,
-    mode: "production",
+    mode: 'production',
     plugins: [],
   };
 }

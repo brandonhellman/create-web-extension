@@ -1,3 +1,3 @@
 export async function zip() {
-  console.log("Zipping...");
+  console.log('Zipping...');
 }
