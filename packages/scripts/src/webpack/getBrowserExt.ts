@@ -1,3 +1,6 @@
+import path from 'path';
+import CopyPlugin from 'copy-webpack-plugin';
+import { flatten } from 'flat';
 import fs from 'fs-extra';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 
@@ -11,7 +14,7 @@ interface Plugins {
   [key: string]: any;
 }
 
-async function getManifestPlugin(manifestJson: any, packageJson: any) {
+function getManifestPlugin(manifestJson: any, packageJson: any) {
   // Clone the json object to avoid changing the original object
   const manifest = { ...manifestJson };
 
@@ -61,6 +64,31 @@ async function getManifestPlugin(manifestJson: any, packageJson: any) {
   return manifestPlugin;
 }
 
+function getPngPlugin(manifestJson: any) {
+  // Flatten the manifest.json object so we can search for any .png files easily
+  const flatManifestJson = flatten<any, any>(manifestJson);
+
+  // Find any .png files in the manifest.json and copy them to the unpacked folder
+  const patterns = Object.values(flatManifestJson).reduce<string[]>((acc: any[], value: any) => {
+    if (typeof value === 'string') {
+      const parsed = path.parse(value);
+      const isPng = parsed.ext === '.png';
+
+      if (isPng) {
+        acc.push({
+          from: path.join(pathToBrowserExt.root, value),
+          to: path.join(pathToBrowserExt.unpacked, value),
+        });
+      }
+    }
+
+    return acc;
+  }, []);
+
+  const pngPlugin = new CopyPlugin({ patterns: patterns });
+  return pngPlugin;
+}
+
 export async function getBrowserExt() {
   const entries: Entries = {};
   const plugins: Plugins[] = [];
@@ -75,6 +103,9 @@ export async function getBrowserExt() {
 
   const manifestPlugin = getManifestPlugin(manifestJson, packageJson);
   plugins.push(manifestPlugin);
+
+  const pngPlugin = getPngPlugin(manifestJson);
+  plugins.push(pngPlugin);
 
   return {
     entries,
