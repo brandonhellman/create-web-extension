@@ -15,6 +15,31 @@ interface Plugins {
   [key: string]: any;
 }
 
+// Get the entries for the background scripts
+function getBackgroundEntries(manifestJson: any) {
+  const entries: Entries = {};
+
+  if (manifestJson.background?.service_worker) {
+    entries['background'] = path.join(pathToBrowserExt.root, manifestJson.background.service_worker);
+  }
+
+  return entries;
+}
+
+// Get the entries for the content scripts
+function getContentScriptEntries(manifestJson: any) {
+  const entries: Entries = {};
+
+  return entries;
+}
+
+// Get the entries in any html files
+function getHtmlEntries() {
+  const entries: Entries = {};
+
+  return entries;
+}
+
 // Replace special values in the manifest.json file and create a plugin to generate the manifest.json file
 function getManifestPlugin(manifestJson: any, packageJson: any) {
   // Clone the json object to avoid changing the original object
@@ -116,25 +141,23 @@ function getHtmlPngPlugin() {
 }
 
 export async function getBrowserExt() {
-  const entries: Entries = {};
-  const plugins: Plugins[] = [];
-
-  // Load the manifest.json file from the browser extension
+  // Load the manifest.json and package.json files
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
-  console.log('manifestJson', manifestJson);
-
-  // Load the package.json file from the browser extension
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
-  console.log('packageJson', packageJson);
 
-  const manifestPlugin = getManifestPlugin(manifestJson, packageJson);
-  plugins.push(manifestPlugin);
+  // Get the entries
+  const entries: Entries = {
+    ...getBackgroundEntries(manifestJson),
+    ...getContentScriptEntries(manifestJson),
+    ...getHtmlEntries(),
+  };
 
-  const manifestPngPlugin = getManifestPngPlugin(manifestJson);
-  plugins.push(manifestPngPlugin);
-
-  const htmlPlugin = getHtmlPlugin();
-  plugins.push(htmlPlugin);
+  // Get the plugins
+  const plugins: Plugins[] = [
+    getManifestPlugin(manifestJson, packageJson),
+    getManifestPngPlugin(manifestJson),
+    getHtmlPlugin(),
+  ];
 
   return {
     entries,
