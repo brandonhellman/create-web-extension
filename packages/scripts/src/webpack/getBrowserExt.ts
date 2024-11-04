@@ -4,6 +4,7 @@ import { flatten } from 'flat';
 import fs from 'fs-extra';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import glob from 'glob';
+import { JSDOM } from 'jsdom';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 
@@ -30,12 +31,43 @@ function getBackgroundEntries(manifestJson: any) {
 function getContentScriptEntries(manifestJson: any) {
   const entries: Entries = {};
 
+  if (manifestJson.content_scripts) {
+    manifestJson.content_scripts.forEach((contentScript: { js: string[] }) => {
+      if (contentScript.js) {
+        contentScript.js.forEach((js: string) => {
+          entries[js] = path.join(pathToBrowserExt.root, js);
+        });
+      }
+    });
+  }
+
   return entries;
 }
 
 // Get the entries in any html files
 function getHtmlEntries() {
   const entries: Entries = {};
+
+  glob
+    .sync('**/*.html', { cwd: pathToBrowserExt.root, ignore: ['node_modules/**/*', 'build/**/*'] })
+    .forEach((htmlFile) => {
+      const htmlPath = path.join(pathToBrowserExt.root, htmlFile);
+      const dirname = path.dirname(htmlPath);
+      const content = fs.readFileSync(htmlPath);
+      const dom = new JSDOM(content.toString());
+
+      dom.window.document.querySelectorAll('script').forEach((script) => {
+        const scriptPath = path.join(dirname, script.src);
+        const scriptExists = fs.pathExistsSync(scriptPath);
+
+        if (scriptExists) {
+          const relative = path.relative(pathToBrowserExt.root, scriptPath);
+          const parsed = path.parse(relative);
+          const name = relative.replace(parsed.ext, '');
+          entries[name] = scriptPath;
+        }
+      });
+    });
 
   return entries;
 }
@@ -119,18 +151,20 @@ function getManifestPngPlugin(manifestJson: any) {
 
 // Find any .html files in the manifest.json and copy them to the unpacked folder
 function getHtmlPlugin() {
-  const patterns = glob.sync('**/*.html', { cwd: pathToBrowserExt.root }).map((htmlFile) => {
-    return {
-      from: path.join(pathToBrowserExt.root, htmlFile),
-      to: path.join(pathToBrowserExt.unpacked, htmlFile),
-      transform(content: Buffer, absoluteFrom: string) {
-        // Convert the buffer to a string
-        const html = content.toString();
-        // Replace any script tags with .jsx|.ts|.tsx with .js
-        return html.replace(/(<script.*src=".*)(\.jsx|\.ts|\.tsx)(".*)/g, '$1.js$3');
-      },
-    };
-  });
+  const patterns = glob
+    .sync('**/*.html', { cwd: pathToBrowserExt.root, ignore: ['node_modules/**/*', 'build/**/*'] })
+    .map((htmlFile) => {
+      return {
+        from: path.join(pathToBrowserExt.root, htmlFile),
+        to: path.join(pathToBrowserExt.unpacked, htmlFile),
+        transform(content: Buffer, absoluteFrom: string) {
+          // Convert the buffer to a string
+          const html = content.toString();
+          // Replace any script tags with .jsx|.ts|.tsx with .js
+          return html.replace(/(<script.*src=".*)(\.jsx|\.ts|\.tsx)(".*)/g, '$1.js$3');
+        },
+      };
+    });
 
   return new CopyPlugin({ patterns: patterns });
 }
