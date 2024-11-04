@@ -13,19 +13,51 @@ interface Plugins {
 
 async function getManifestPlugin(manifestJson: any, packageJson: any) {
   // Clone the json object to avoid changing the original object
-  const manifestJsonPlugin = { ...manifestJson };
+  const manifest = { ...manifestJson };
 
   // Replace special value for the name
-  if (manifestJson.name === '__package.name__') {
-    manifestJson.name = packageJson.name;
+  if (manifest.name === '__package.name__') {
+    manifest.name = packageJson.name;
   }
 
   // Replace special value for the version
-  if (manifestJson.version === '__package.version__') {
-    manifestJson.version = packageJson.version;
+  if (manifest.version === '__package.version__') {
+    manifest.version = packageJson.version;
   }
 
-  const manifestPlugin = new GenerateJsonPlugin('manifest.json', manifestJsonPlugin);
+  // Replace special value for the description
+  if (manifest.description === '__package.description__') {
+    manifest.description = packageJson.description;
+  }
+
+  // Find any .jsx|.ts|.tsx in the background and replace with .js
+  if (manifest.background?.service_worker) {
+    manifest.background.service_worker = manifest.background.service_worker.replace(/\.(jsx|ts|tsx)/, '.js');
+  }
+
+  // Find any .jsx|.ts|.tsx in the content_scripts and replace with .js
+  if (manifest.content_scripts) {
+    manifest.content_scripts.forEach((contentScript: { js: string[] }) => {
+      if (contentScript.js) {
+        contentScript.js = contentScript.js.map((js: string) => {
+          return js.replace(/\.(jsx|ts|tsx)/, '.js');
+        });
+      }
+    });
+  }
+
+  // Find any .jsx|.ts|.tsx in the web_accessible_resources and replace with .js
+  if (manifest.web_accessible_resources) {
+    manifest.web_accessible_resources.forEach((resource: { resources: string[] }) => {
+      if (resource.resources) {
+        resource.resources = resource.resources.map((res: string) => {
+          return res.replace(/\.(jsx|ts|tsx)/, '.js');
+        });
+      }
+    });
+  }
+
+  const manifestPlugin = new GenerateJsonPlugin('manifest.json', manifest);
   return manifestPlugin;
 }
 
