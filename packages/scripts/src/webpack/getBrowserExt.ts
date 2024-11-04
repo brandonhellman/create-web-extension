@@ -3,6 +3,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { flatten } from 'flat';
 import fs from 'fs-extra';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
+import glob from 'glob';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 
@@ -14,6 +15,7 @@ interface Plugins {
   [key: string]: any;
 }
 
+// Replace special values in the manifest.json file and create a plugin to generate the manifest.json file
 function getManifestPlugin(manifestJson: any, packageJson: any) {
   // Clone the json object to avoid changing the original object
   const manifest = { ...manifestJson };
@@ -64,7 +66,8 @@ function getManifestPlugin(manifestJson: any, packageJson: any) {
   return manifestPlugin;
 }
 
-function getPngPlugin(manifestJson: any) {
+// Find any .png files in the manifest.json and copy them to the unpacked folder
+function getManifestPngPlugin(manifestJson: any) {
   // Flatten the manifest.json object so we can search for any .png files easily
   const flatManifestJson = flatten<any, any>(manifestJson);
 
@@ -89,6 +92,29 @@ function getPngPlugin(manifestJson: any) {
   return pngPlugin;
 }
 
+// Find any .html files in the manifest.json and copy them to the unpacked folder
+function getHtmlPlugin() {
+  const patterns = glob.sync('**/*.html', { cwd: pathToBrowserExt.root }).map((htmlFile) => {
+    return {
+      from: path.join(pathToBrowserExt.root, htmlFile),
+      to: path.join(pathToBrowserExt.unpacked, htmlFile),
+      transform(content: Buffer, absoluteFrom: string) {
+        // Convert the buffer to a string
+        const html = content.toString();
+        // Replace any script tags with .jsx|.ts|.tsx with .js
+        return html.replace(/(<script.*src=".*)(\.jsx|\.ts|\.tsx)(".*)/g, '$1.js$3');
+      },
+    };
+  });
+
+  return new CopyPlugin({ patterns: patterns });
+}
+
+// Find any .png files in the html files and copy them to the unpacked folder
+function getHtmlPngPlugin() {
+  // TODO: Implement this
+}
+
 export async function getBrowserExt() {
   const entries: Entries = {};
   const plugins: Plugins[] = [];
@@ -104,8 +130,11 @@ export async function getBrowserExt() {
   const manifestPlugin = getManifestPlugin(manifestJson, packageJson);
   plugins.push(manifestPlugin);
 
-  const pngPlugin = getPngPlugin(manifestJson);
-  plugins.push(pngPlugin);
+  const manifestPngPlugin = getManifestPngPlugin(manifestJson);
+  plugins.push(manifestPngPlugin);
+
+  const htmlPlugin = getHtmlPlugin();
+  plugins.push(htmlPlugin);
 
   return {
     entries,
