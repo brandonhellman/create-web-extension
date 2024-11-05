@@ -8,6 +8,14 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
   const entries = getEntries();
   const plugins = getPlugins();
 
+  console.log('entries', entries);
+  console.log('');
+
+  plugins?.forEach((plugin) => {
+    console.log('plugin', plugin);
+    console.log('');
+  });
+
   const config: Configuration = {
     entry: entries,
 
