@@ -1,6 +1,7 @@
 import path from 'path';
 import { type Configuration } from 'webpack';
 
+import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getBrowserExt } from './getBrowserExt';
 
 export async function getConfig(mode: 'development' | 'production'): Promise<Configuration> {
@@ -20,11 +21,11 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
     },
 
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
     },
 
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: pathToBrowserExt.build,
     },
   };
 
