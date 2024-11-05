@@ -6,6 +6,19 @@ import { type Configuration } from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 
+// Get the entry from a path
+function getEntry(entryPath: string) {
+  const relativePath = path.relative(pathToBrowserExt.root, entryPath);
+  const parsedPath = path.parse(relativePath);
+  const name = relativePath.replace(parsedPath.ext, '');
+
+  return {
+    name: name,
+    // TODO: There has to be a better way to do this
+    path: './' + relativePath,
+  };
+}
+
 // Get the entries for the background scripts
 function getBackgroundEntries(manifestJson: any) {
   const entries: Configuration['entry'] = {};
@@ -13,7 +26,8 @@ function getBackgroundEntries(manifestJson: any) {
   const serviceWorker = manifestJson.background?.service_worker;
 
   if (serviceWorker) {
-    entries[serviceWorker] = path.join(pathToBrowserExt.root, serviceWorker);
+    const entry = getEntry(serviceWorker);
+    entries[entry.name] = entry.path;
   }
 
   return entries;
@@ -29,7 +43,8 @@ function getContentScriptEntries(manifestJson: any) {
     contentScripts.forEach((contentScript: { js: string[] }) => {
       if (contentScript.js) {
         contentScript.js.forEach((js: string) => {
-          entries[js] = path.join(pathToBrowserExt.root, js);
+          const entry = getEntry(js);
+          entries[entry.name] = entry.path;
         });
       }
     });
@@ -52,14 +67,8 @@ function getHtmlEntries() {
 
       dom.window.document.querySelectorAll('script').forEach((script) => {
         const scriptPath = path.join(dirname, script.src);
-        const scriptExists = fs.pathExistsSync(scriptPath);
-
-        if (scriptExists) {
-          const relative = path.relative(pathToBrowserExt.root, scriptPath);
-          const parsed = path.parse(relative);
-          const name = relative.replace(parsed.ext, '');
-          entries[name] = scriptPath;
-        }
+        const entry = getEntry(scriptPath);
+        entries[entry.name] = entry.path;
       });
     });
 
