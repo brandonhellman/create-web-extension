@@ -11,7 +11,10 @@ function getBackgroundEntries(manifestJson: any) {
   const entries: Configuration['entry'] = {};
 
   if (manifestJson.background?.service_worker) {
-    entries['background'] = path.join(pathToBrowserExt.root, manifestJson.background.service_worker);
+    entries[manifestJson.background.service_worker] = path.join(
+      pathToBrowserExt.root,
+      manifestJson.background.service_worker,
+    );
   }
 
   return entries;
