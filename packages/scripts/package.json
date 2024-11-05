@@ -20,6 +20,7 @@
     "generate-json-webpack-plugin": "^2.0.0",
     "glob": "^11.0.0",
     "jsdom": "^25.0.1",
+    "ts-loader": "^9.5.1",
     "webpack": "^5.95.0"
   },
   "devDependencies": {
