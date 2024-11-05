@@ -1,4 +1,4 @@
-import { webpack } from 'webpack';
+import webpack from 'webpack';
 
 import { getConfig } from '../webpack/getConfig';
 
