@@ -11,6 +11,6 @@ export const pathToBrowserExt = {
   manifestJson: resolveToBrowserExt('manifest.json'),
   packageJson: resolveToBrowserExt('package.json'),
   tsconfigJson: resolveToBrowserExt('tsconfig.json'),
-  build: resolveToBrowserExt('/build'),
-  unpacked: resolveToBrowserExt('/build/unpacked/'),
+  build: resolveToBrowserExt('build'),
+  unpacked: resolveToBrowserExt('build/unpacked/'),
 };
