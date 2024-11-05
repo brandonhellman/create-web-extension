@@ -10,11 +10,10 @@ import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 function getBackgroundEntries(manifestJson: any) {
   const entries: Configuration['entry'] = {};
 
-  if (manifestJson.background?.service_worker) {
-    entries[manifestJson.background.service_worker] = path.join(
-      pathToBrowserExt.root,
-      manifestJson.background.service_worker,
-    );
+  const serviceWorker = manifestJson.background?.service_worker;
+
+  if (serviceWorker) {
+    entries[serviceWorker] = path.join(pathToBrowserExt.root, serviceWorker);
   }
 
   return entries;
@@ -24,8 +23,10 @@ function getBackgroundEntries(manifestJson: any) {
 function getContentScriptEntries(manifestJson: any) {
   const entries: Configuration['entry'] = {};
 
-  if (manifestJson.content_scripts) {
-    manifestJson.content_scripts.forEach((contentScript: { js: string[] }) => {
+  const contentScripts = manifestJson.content_scripts;
+
+  if (contentScripts) {
+    contentScripts.forEach((contentScript: { js: string[] }) => {
       if (contentScript.js) {
         contentScript.js.forEach((js: string) => {
           entries[js] = path.join(pathToBrowserExt.root, js);
