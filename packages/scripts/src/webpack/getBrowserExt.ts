@@ -3,7 +3,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { flatten } from 'flat';
 import fs from 'fs-extra';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
-import glob from 'glob';
+import { glob } from 'glob';
 import { JSDOM } from 'jsdom';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
