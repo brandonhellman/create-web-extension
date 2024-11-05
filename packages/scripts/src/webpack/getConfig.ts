@@ -1,14 +1,15 @@
-import path from 'path';
 import { type Configuration } from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
-import { getBrowserExt } from './getBrowserExt';
+import { getEntries } from './getEntries';
+import { getPlugins } from './getPlugins';
 
 export async function getConfig(mode: 'development' | 'production'): Promise<Configuration> {
-  const browserExt = await getBrowserExt();
+  const entries = getEntries();
+  const plugins = getPlugins();
 
-  const config = {
-    entry: browserExt.entries,
+  const config: Configuration = {
+    entry: entries,
 
     module: {
       rules: [
@@ -25,22 +26,22 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
     },
 
     output: {
-      path: pathToBrowserExt.build,
+      path: pathToBrowserExt.unpacked,
     },
   };
 
   if (mode === 'development') {
     return {
       ...config,
-      mode: 'development',
       devtool: 'inline-source-map',
-      plugins: [],
+      mode: 'development',
+      plugins: plugins,
     };
   }
 
   return {
     ...config,
     mode: 'production',
-    plugins: [],
+    plugins: plugins,
   };
 }
