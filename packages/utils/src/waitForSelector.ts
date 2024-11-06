@@ -1,4 +1,4 @@
-export function waitForEl<T extends HTMLElement>(selector: string, container?: HTMLElement, maxWait?: number) {
+export function waitForSelector<T extends HTMLElement>(selector: string, container?: HTMLElement, maxWait?: number) {
   const el = (container || document).querySelector<T>(selector);
 
   if (el) {

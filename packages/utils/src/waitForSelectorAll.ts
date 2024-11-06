@@ -1,4 +1,4 @@
-export function waitForEls<T extends HTMLElement>(selector: string, container?: HTMLElement, maxWait?: number) {
+export function waitForSelectorAll<T extends HTMLElement>(selector: string, container?: HTMLElement, maxWait?: number) {
   const els = (container || document).querySelectorAll<T>(selector);
 
   if (els.length) {

@@ -1,4 +1,3 @@
-export function example() {
-  console.log('example');
-  return 'example';
-}
+export { sleep } from './sleep';
+export { waitForSelector } from './waitForSelector';
+export { waitForSelectorAll } from './waitForSelectorAll';
