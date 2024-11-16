@@ -1,9 +1,10 @@
 import { type Configuration } from 'webpack';
-import WebpackExtReloader from 'webpack-ext-reloader';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
 import { getPlugins } from './getPlugins';
+
+const ExtReloaderPlugin = require('webpack-ext-reloader');
 
 export async function getConfig(mode: 'development' | 'production'): Promise<Configuration> {
   const entries = getEntries();
@@ -50,7 +51,7 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
       mode: 'development',
       plugins: [
         ...plugins,
-        new WebpackExtReloader.ExtensionReloader({
+        new ExtReloaderPlugin({
           entries: {
             background: entries.background,
             contentScript: entries.contentScript,
