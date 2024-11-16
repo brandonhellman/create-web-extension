@@ -110,7 +110,7 @@ function getHtmlPngPlugin() {
   // TODO: Implement this
 }
 
-export function getPlugins(): Configuration['plugins'] {
+export function getPlugins() {
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
 

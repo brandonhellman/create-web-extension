@@ -54,7 +54,7 @@ function getContentScriptEntries(manifestJson: any) {
 }
 
 // Get the entries in any html files
-function getHtmlEntries() {
+function getExtensionPageEntries() {
   const entries: Configuration['entry'] = {};
 
   glob
@@ -75,14 +75,16 @@ function getHtmlEntries() {
   return entries;
 }
 
-export function getEntries(): Configuration['entry'] {
+export function getEntries() {
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
 
-  const entries: Configuration['entry'] = {
-    ...getBackgroundEntries(manifestJson),
-    ...getContentScriptEntries(manifestJson),
-    ...getHtmlEntries(),
-  };
+  const backgroundEntries = getBackgroundEntries(manifestJson);
+  const contentScriptEntries = getContentScriptEntries(manifestJson);
+  const extensionPageEntries = getExtensionPageEntries();
 
-  return entries;
+  return {
+    background: backgroundEntries,
+    contentScript: contentScriptEntries,
+    extensionPage: extensionPageEntries,
+  };
 }

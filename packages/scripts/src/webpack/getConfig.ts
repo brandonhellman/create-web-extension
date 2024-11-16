@@ -1,4 +1,5 @@
 import { type Configuration } from 'webpack';
+import { ExtensionReloader } from 'webpack-ext-reloader';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
@@ -17,7 +18,11 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
   });
 
   const config: Configuration = {
-    entry: entries,
+    entry: {
+      ...entries.background,
+      ...entries.contentScript,
+      ...entries.extensionPage,
+    },
 
     module: {
       rules: [
@@ -43,13 +48,24 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
       ...config,
       devtool: 'inline-source-map',
       mode: 'development',
-      plugins: plugins,
+      plugins: [
+        ...plugins,
+        new ExtensionReloader({
+          entries: {
+            background: entries.background,
+            contentScript: entries.contentScript,
+            extensionPage: entries.extensionPage,
+          },
+          port: 9090,
+          reloadPage: true,
+        }),
+      ],
     };
   }
 
   return {
     ...config,
     mode: 'production',
-    plugins: plugins,
+    plugins: [...plugins],
   };
 }
