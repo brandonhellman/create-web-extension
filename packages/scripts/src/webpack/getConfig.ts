@@ -1,5 +1,5 @@
 import { type Configuration } from 'webpack';
-import { ExtensionReloader } from 'webpack-ext-reloader';
+import WebpackExtReloader from 'webpack-ext-reloader';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
@@ -50,7 +50,7 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
       mode: 'development',
       plugins: [
         ...plugins,
-        new ExtensionReloader({
+        new WebpackExtReloader.ExtensionReloader({
           entries: {
             background: entries.background,
             contentScript: entries.contentScript,
