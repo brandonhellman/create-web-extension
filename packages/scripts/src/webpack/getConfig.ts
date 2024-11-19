@@ -4,8 +4,6 @@ import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
 import { getPlugins } from './getPlugins';
 
-const ExtReloaderPlugin = require('webpack-ext-reloader');
-
 export async function getConfig(mode: 'development' | 'production'): Promise<Configuration> {
   const entries = getEntries();
   const plugins = getPlugins();
@@ -49,18 +47,7 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
       ...config,
       devtool: 'inline-source-map',
       mode: 'development',
-      plugins: [
-        ...plugins,
-        new ExtReloaderPlugin({
-          entries: {
-            background: entries.background,
-            contentScript: entries.contentScript,
-            extensionPage: entries.extensionPage,
-          },
-          port: 9090,
-          reloadPage: true,
-        }),
-      ],
+      plugins: [...plugins],
     };
   }
 
