@@ -82,6 +82,10 @@ function getManifestPngPlugin(manifestJson: any) {
     return acc;
   }, []);
 
+  if (!patterns.length) {
+    return;
+  }
+
   return new CopyPlugin({ patterns: patterns });
 }
 
@@ -101,6 +105,10 @@ function getHtmlPlugin() {
         },
       };
     });
+
+  if (!patterns.length) {
+    return;
+  }
 
   return new CopyPlugin({ patterns: patterns });
 }
