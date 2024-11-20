@@ -3,6 +3,8 @@ import webpack from 'webpack';
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
 import { getPlugins } from './getPlugins';
+import { BrowserExtReloadBackgroundPlugin } from './plugins/BrowserExtReloadBackgroundPlugin';
+import { BrowserExtReloadContentScriptPlugin } from './plugins/BrowserExtReloadContentScriptPlugin';
 
 export async function getConfig(mode: 'development' | 'production'): Promise<webpack.Configuration> {
   const entries = getEntries();
@@ -63,31 +65,12 @@ export async function getConfig(mode: 'development' | 'production'): Promise<web
       mode: 'development',
       devtool: 'inline-source-map',
       plugins: [
-        ...plugins,
-
-        // For background script
-        new webpack.BannerPlugin({
-          raw: true,
-          entryOnly: true,
-          include: Object.keys(entries.background),
-          banner: `
-            if (module.hot) { module.hot.accept(); }
-            // Background-specific injection code
-          `,
-        }),
-
-        /*
-        // For content script
-        new BannerPlugin({
-          raw: true,
-          entryOnly: true,
-          include: ['content'],
-          banner: `
-            if (module.hot) { module.hot.accept(); }
-            // Content-specific injection code
-          `,
-        }),
-        */
+        plugins.manifestCopyPlugin,
+        plugins.manifestPngCopyPlugin,
+        plugins.htmlCopyPlugin,
+        plugins.htmlPngCopyPlugin,
+        BrowserExtReloadBackgroundPlugin(entries.background),
+        BrowserExtReloadContentScriptPlugin(entries.contentScript),
       ],
       // Add development-specific settings
       stats: 'errors-warnings',
@@ -100,7 +83,12 @@ export async function getConfig(mode: 'development' | 'production'): Promise<web
   return {
     ...config,
     mode: 'production',
-    plugins: [...plugins],
+    plugins: [
+      plugins.manifestCopyPlugin,
+      plugins.manifestPngCopyPlugin,
+      plugins.htmlCopyPlugin,
+      plugins.htmlPngCopyPlugin,
+    ],
     // Add production-specific settings
     devtool: 'source-map', // Generates separate source maps
     optimization: {

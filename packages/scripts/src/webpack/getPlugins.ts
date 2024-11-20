@@ -3,12 +3,11 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { flatten } from 'flat';
 import fs from 'fs-extra';
 import { glob } from 'glob';
-import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 
-// Replace special values in the manifest.json file and create a plugin to generate the manifest.json file
-function getManifestPlugin(manifestJson: any, packageJson: any) {
+// Replace special values in the manifest.json file and then copy it to the unpacked folder
+function getManifestCopyPlugin(manifestJson: any, packageJson: any) {
   return new CopyPlugin({
     patterns: [
       {
@@ -47,6 +46,7 @@ function getManifestPlugin(manifestJson: any, packageJson: any) {
           if (manifest.web_accessible_resources) {
             manifest.web_accessible_resources.forEach((resource: { resources: string[] }) => {
               if (resource.resources) {
+                console.log('resource.resources', resource.resources);
                 resource.resources = resource.resources.map((res: string) => res.replace(/\.(jsx|ts|tsx)/, '.js'));
               }
             });
@@ -61,7 +61,7 @@ function getManifestPlugin(manifestJson: any, packageJson: any) {
 }
 
 // Find any .png files in the manifest.json and copy them to the unpacked folder
-function getManifestPngPlugin(manifestJson: any) {
+function getManifestPngCopyPlugin(manifestJson: any) {
   // Flatten the manifest.json object so we can search for any .png files easily
   const flatManifestJson = flatten<any, any>(manifestJson);
 
@@ -83,14 +83,14 @@ function getManifestPngPlugin(manifestJson: any) {
   }, []);
 
   if (!patterns.length) {
-    return;
+    return null;
   }
 
   return new CopyPlugin({ patterns: patterns });
 }
 
-// Find any .html files in the manifest.json and copy them to the unpacked folder
-function getHtmlPlugin() {
+// Find any .html files in the root of the project and copy them to the unpacked folder
+function getHtmlCopyPlugin() {
   const patterns = glob
     .sync('**/*.html', { cwd: pathToBrowserExt.root, ignore: ['node_modules/**/*', 'build/**/*'] })
     .map((htmlFile) => {
@@ -107,26 +107,31 @@ function getHtmlPlugin() {
     });
 
   if (!patterns.length) {
-    return;
+    return null;
   }
 
   return new CopyPlugin({ patterns: patterns });
 }
 
 // Find any .png files in the html files and copy them to the unpacked folder
-function getHtmlPngPlugin() {
+function getHtmlPngCopyPlugin() {
   // TODO: Implement this
+  return null;
 }
 
 export function getPlugins() {
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
 
-  const plugins: webpack.Configuration['plugins'] = [
-    getManifestPlugin(manifestJson, packageJson),
-    getManifestPngPlugin(manifestJson),
-    getHtmlPlugin(),
-  ];
+  const manifestCopyPlugin = getManifestCopyPlugin(manifestJson, packageJson);
+  const manifestPngCopyPlugin = getManifestPngCopyPlugin(manifestJson);
+  const htmlCopyPlugin = getHtmlCopyPlugin();
+  const htmlPngCopyPlugin = getHtmlPngCopyPlugin();
 
-  return plugins;
+  return {
+    manifestCopyPlugin,
+    manifestPngCopyPlugin,
+    htmlCopyPlugin,
+    htmlPngCopyPlugin,
+  };
 }
