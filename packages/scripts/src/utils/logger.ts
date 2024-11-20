@@ -16,6 +16,7 @@ interface LoggerOptions {
   timestamp?: boolean;
   divider?: boolean;
 }
+
 class Logger {
   private static readonly defaultOptions: LoggerOptions = {
     timestamp: true,
