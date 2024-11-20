@@ -24,12 +24,15 @@
     "glob": "^11.0.0",
     "jsdom": "^25.0.1",
     "ts-loader": "^9.5.1",
-    "webpack": "^5.96.1"
+    "webpack": "^5.96.1",
+    "webpack-ext-reloader": "^1.1.13",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
     "@types/fs-extra": "^11.0.4",
     "@types/jsdom": "^21.1.7",
+    "@types/ws": "^8.5.13",
     "tsup": "^8.3.5",
     "typescript": "latest"
   }
