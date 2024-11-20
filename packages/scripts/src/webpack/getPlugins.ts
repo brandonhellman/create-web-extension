@@ -3,7 +3,7 @@ import CopyPlugin from 'copy-webpack-plugin';
 import { flatten } from 'flat';
 import fs from 'fs-extra';
 import { glob } from 'glob';
-import { type Configuration } from 'webpack';
+import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 
@@ -122,7 +122,7 @@ export function getPlugins() {
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
 
-  const plugins: Configuration['plugins'] = [
+  const plugins: webpack.Configuration['plugins'] = [
     getManifestPlugin(manifestJson, packageJson),
     getManifestPngPlugin(manifestJson),
     getHtmlPlugin(),

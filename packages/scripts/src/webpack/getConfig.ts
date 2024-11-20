@@ -1,22 +1,14 @@
-import { type Configuration } from 'webpack';
+import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
 import { getPlugins } from './getPlugins';
 
-export async function getConfig(mode: 'development' | 'production'): Promise<Configuration> {
+export async function getConfig(mode: 'development' | 'production'): Promise<webpack.Configuration> {
   const entries = getEntries();
   const plugins = getPlugins();
 
-  console.log('entries', entries);
-  console.log('');
-
-  plugins?.forEach((plugin) => {
-    console.log('plugin', plugin);
-    console.log('');
-  });
-
-  const config: Configuration = {
+  const config: webpack.Configuration = {
     entry: {
       ...entries.background,
       ...entries.contentScript,
@@ -70,7 +62,33 @@ export async function getConfig(mode: 'development' | 'production'): Promise<Con
       ...config,
       mode: 'development',
       devtool: 'inline-source-map',
-      plugins: [...plugins],
+      plugins: [
+        ...plugins,
+
+        // For background script
+        new webpack.BannerPlugin({
+          raw: true,
+          entryOnly: true,
+          include: Object.keys(entries.background),
+          banner: `
+            if (module.hot) { module.hot.accept(); }
+            // Background-specific injection code
+          `,
+        }),
+
+        /*
+        // For content script
+        new BannerPlugin({
+          raw: true,
+          entryOnly: true,
+          include: ['content'],
+          banner: `
+            if (module.hot) { module.hot.accept(); }
+            // Content-specific injection code
+          `,
+        }),
+        */
+      ],
       // Add development-specific settings
       stats: 'errors-warnings',
       cache: {

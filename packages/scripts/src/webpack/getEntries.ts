@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { glob } from 'glob';
 import { JSDOM } from 'jsdom';
-import { type Configuration } from 'webpack';
+import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 
@@ -21,7 +21,7 @@ function getEntry(entryPath: string) {
 
 // Get the entries for the background scripts
 function getBackgroundEntries(manifestJson: any) {
-  const entries: Configuration['entry'] = {};
+  const entries: webpack.Configuration['entry'] = {};
 
   const serviceWorker = manifestJson.background?.service_worker;
 
@@ -35,7 +35,7 @@ function getBackgroundEntries(manifestJson: any) {
 
 // Get the entries for the content scripts
 function getContentScriptEntries(manifestJson: any) {
-  const entries: Configuration['entry'] = {};
+  const entries: webpack.Configuration['entry'] = {};
 
   const contentScripts = manifestJson.content_scripts;
 
@@ -55,7 +55,7 @@ function getContentScriptEntries(manifestJson: any) {
 
 // Get the entries in any html files
 function getExtensionPageEntries() {
-  const entries: Configuration['entry'] = {};
+  const entries: webpack.Configuration['entry'] = {};
 
   glob
     .sync('**/*.html', { cwd: pathToBrowserExt.root, ignore: ['node_modules/**/*', 'build/**/*'] })
