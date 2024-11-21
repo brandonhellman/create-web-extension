@@ -102,7 +102,6 @@ export async function dev() {
     if (forceExit) {
       Logger.info('Force exiting...');
       process.exit(1);
-      return;
     }
 
     forceExit = true;
