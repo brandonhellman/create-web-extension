@@ -2,7 +2,22 @@ import webpack from 'webpack';
 
 const banner = (port: number) => `
 (() => {
-  console.log('Reloading content script...');
+  function connect() {
+    const ws = new WebSocket('ws://localhost:${port}');
+        
+    ws.onmessage = (event) => {
+      if (event.data === 'reload') {
+        window.location.reload();
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('Dev server disconnected. Retrying in 1s...');
+      setTimeout(connect, 1000);
+    };
+  }
+
+  connect();
 })();
 `;
 
