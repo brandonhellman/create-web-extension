@@ -1,8 +1,8 @@
 import webpack from 'webpack';
 
-const banner = `
+const banner = (port: number) => `
 (() => {
-  const ws = new WebSocket('ws://localhost:8082');
+  const ws = new WebSocket('ws://localhost:${port}');
       
   ws.onmessage = (event) => {
     if (event.data === 'reload') {
@@ -19,11 +19,11 @@ const banner = `
 })();
 `;
 
-export function BrowserExtReloadBackgroundPlugin(entries: any) {
+export function ReloadBackgroundPlugin(options: { entries: webpack.EntryObject; port: number }) {
   return new webpack.BannerPlugin({
     raw: true,
     entryOnly: true,
-    include: Object.keys(entries),
-    banner: banner,
+    include: Object.keys(options.entries),
+    banner: banner(options.port),
   });
 }

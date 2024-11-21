@@ -2,13 +2,14 @@ import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
-import { getPlugins } from './getPlugins';
-import { BrowserExtReloadBackgroundPlugin } from './plugins/BrowserExtReloadBackgroundPlugin';
-import { BrowserExtReloadContentScriptPlugin } from './plugins/BrowserExtReloadContentScriptPlugin';
+import { CopyHtmlPlugin } from './plugins/CopyHtmlPlugin';
+import { CopyManifestPlugin } from './plugins/CopyManifestPlugin';
+import { CopyManifestPngPlugin } from './plugins/CopyManifestPngPlugin';
+import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
+import { ReloadContentScriptPlugin } from './plugins/ReloadContentScriptPlugin';
 
 export async function getConfig(mode: 'development' | 'production'): Promise<webpack.Configuration> {
   const entries = getEntries();
-  const plugins = getPlugins();
 
   const isDevelopment = mode === 'development';
   const isProduction = mode === 'production';
@@ -67,12 +68,11 @@ export async function getConfig(mode: 'development' | 'production'): Promise<web
       ...config,
       mode: 'development',
       plugins: [
-        plugins.manifestCopyPlugin,
-        plugins.manifestPngCopyPlugin,
-        plugins.htmlCopyPlugin,
-        plugins.htmlPngCopyPlugin,
-        BrowserExtReloadBackgroundPlugin(entries.background),
-        BrowserExtReloadContentScriptPlugin(entries.contentScript),
+        CopyManifestPlugin(),
+        CopyManifestPngPlugin(),
+        CopyHtmlPlugin(),
+        ReloadBackgroundPlugin({ entries: entries.background, port: 9000 }),
+        ReloadContentScriptPlugin({ entries: entries.contentScript, port: 9000 }),
       ].filter(Boolean),
 
       // Add development-specific settings
@@ -88,12 +88,7 @@ export async function getConfig(mode: 'development' | 'production'): Promise<web
     return {
       ...config,
       mode: 'production',
-      plugins: [
-        plugins.manifestCopyPlugin,
-        plugins.manifestPngCopyPlugin,
-        plugins.htmlCopyPlugin,
-        plugins.htmlPngCopyPlugin,
-      ].filter(Boolean),
+      plugins: [CopyManifestPlugin(), CopyManifestPngPlugin(), CopyHtmlPlugin()].filter(Boolean),
 
       // Add production-specific settings
       devtool: 'source-map', // Generates separate source maps
