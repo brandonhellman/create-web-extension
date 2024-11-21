@@ -7,7 +7,7 @@ import { getConfig } from '../webpack/getConfig';
 // Track WebSocket connections and webpack watcher
 let wss: WebSocketServer | null = null;
 let webpackWatcher: webpack.Watching | null = null;
-const WEBSOCKET_PORT = 8082;
+const WEBSOCKET_PORT = 9000;
 
 function setupWebSocketServer() {
   if (wss) {
