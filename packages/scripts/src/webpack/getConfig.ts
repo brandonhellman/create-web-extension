@@ -20,6 +20,8 @@ export function getConfig(options: {
   const isProduction = options.mode === 'production';
 
   const config: webpack.Configuration = {
+    mode: options.mode,
+
     entry: {
       ...options.entry.background,
       ...options.entry.contentScript,
@@ -71,7 +73,7 @@ export function getConfig(options: {
   if (isDevelopment) {
     return {
       ...config,
-      mode: 'development',
+
       plugins: [
         CopyManifestPlugin(),
         CopyManifestPngPlugin(),
@@ -92,7 +94,7 @@ export function getConfig(options: {
   if (isProduction) {
     return {
       ...config,
-      mode: 'production',
+
       plugins: [CopyManifestPlugin(), CopyManifestPngPlugin(), CopyHtmlPlugin()].filter(Boolean),
 
       // Add production-specific settings
