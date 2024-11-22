@@ -4,6 +4,7 @@ import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { getEntries } from './getEntries';
 import { CopyHtmlPlugin } from './plugins/CopyHtmlPlugin';
 import { CopyManifestPlugin } from './plugins/CopyManifestPlugin';
+import { CopyPngHtmlPlugin } from './plugins/CopyPngHtmlPlugin';
 import { CopyPngManifestPlugin } from './plugins/CopyPngManifestPlugin';
 import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
 import { ReloadContentScriptPlugin } from './plugins/ReloadContentScriptPlugin';
@@ -79,6 +80,7 @@ export function getConfig(options: {
         CopyManifestPlugin(),
         CopyHtmlPlugin(),
         CopyPngManifestPlugin(),
+        CopyPngHtmlPlugin(),
         ReloadBackgroundPlugin({ entry: options.entry.background, port: options.port }),
         ReloadContentScriptPlugin({ entry: options.entry.contentScript, port: options.port }),
       ].filter(Boolean),
@@ -96,7 +98,7 @@ export function getConfig(options: {
     return {
       ...config,
 
-      plugins: [CopyManifestPlugin(), CopyHtmlPlugin(), CopyPngManifestPlugin()].filter(Boolean),
+      plugins: [CopyManifestPlugin(), CopyHtmlPlugin(), CopyPngManifestPlugin(), CopyPngHtmlPlugin()].filter(Boolean),
 
       // Add production-specific settings
       devtool: 'source-map', // Generates separate source maps
