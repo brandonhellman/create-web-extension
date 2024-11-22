@@ -8,17 +8,22 @@ import { CopyManifestPngPlugin } from './plugins/CopyManifestPngPlugin';
 import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
 import { ReloadContentScriptPlugin } from './plugins/ReloadContentScriptPlugin';
 
-export async function getConfig(mode: 'development' | 'production'): Promise<webpack.Configuration> {
-  const entries = getEntries();
-
-  const isDevelopment = mode === 'development';
-  const isProduction = mode === 'production';
+export function getConfig(options: {
+  entry: {
+    background: webpack.EntryObject;
+    contentScript: webpack.EntryObject;
+    extensionPage: webpack.EntryObject;
+  };
+  mode: 'development' | 'production';
+}): webpack.Configuration {
+  const isDevelopment = options.mode === 'development';
+  const isProduction = options.mode === 'production';
 
   const config: webpack.Configuration = {
     entry: {
-      ...entries.background,
-      ...entries.contentScript,
-      ...entries.extensionPage,
+      ...options.entry.background,
+      ...options.entry.contentScript,
+      ...options.entry.extensionPage,
     },
 
     module: {
@@ -71,8 +76,8 @@ export async function getConfig(mode: 'development' | 'production'): Promise<web
         CopyManifestPlugin(),
         CopyManifestPngPlugin(),
         CopyHtmlPlugin(),
-        ReloadBackgroundPlugin({ entries: entries.background, port: 9000 }),
-        ReloadContentScriptPlugin({ entries: entries.contentScript, port: 9000 }),
+        ReloadBackgroundPlugin({ entry: options.entry.background, port: 9000 }),
+        ReloadContentScriptPlugin({ entry: options.entry.contentScript, port: 9000 }),
       ].filter(Boolean),
 
       // Add development-specific settings

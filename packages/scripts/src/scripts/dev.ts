@@ -3,6 +3,7 @@ import { WebSocket, WebSocketServer } from 'ws';
 
 import Logger from '../utils/logger';
 import { getConfig } from '../webpack/getConfig';
+import { getEntries } from '../webpack/getEntries';
 
 // Track WebSocket connections and webpack watcher
 let wss: WebSocketServer | null = null;
@@ -43,13 +44,18 @@ function notifyClientsToReload() {
   });
 }
 
-export async function dev() {
+export function dev() {
   Logger.info('Starting development build...');
 
   // Start WebSocket server
   setupWebSocketServer();
 
-  const config = await getConfig('development');
+  const entries = getEntries();
+
+  const config = getConfig({
+    entry: entries,
+    mode: 'development',
+  });
 
   webpackWatcher = webpack(config).watch(
     {

@@ -21,11 +21,11 @@ const banner = (port: number) => `
 })();
 `;
 
-export function ReloadContentScriptPlugin(options: { entries: webpack.EntryObject; port: number }) {
+export function ReloadContentScriptPlugin(options: { entry: webpack.EntryObject; port: number }) {
   return new webpack.BannerPlugin({
     raw: true,
     entryOnly: true,
-    include: Object.keys(options.entries),
+    include: Object.keys(options.entry),
     banner: banner(options.port),
   });
 }
