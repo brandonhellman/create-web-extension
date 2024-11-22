@@ -55,6 +55,7 @@ export function dev() {
   const config = getConfig({
     entry: entries,
     mode: 'development',
+    port: WEBSOCKET_PORT,
   });
 
   webpackWatcher = webpack(config).watch(

@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
-export function CopyManifestPngPlugin() {
+export function CopyPngManifestPlugin() {
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
 
   // Flatten the manifest.json object so we can search for any .png files easily
