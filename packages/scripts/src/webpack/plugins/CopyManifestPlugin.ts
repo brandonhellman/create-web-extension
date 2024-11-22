@@ -57,6 +57,8 @@ export function CopyManifestPlugin() {
             });
           }
 
+          // TODO: Type check the manifest against the schema here
+
           // Return the stringified manifest with pretty printing
           return JSON.stringify(manifestJson, null, 2);
         },
