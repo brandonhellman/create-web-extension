@@ -76,6 +76,7 @@ export function getConfig(options: {
     return {
       ...config,
 
+      // Add plugins
       plugins: [
         CopyManifestPlugin(),
         CopyHtmlPlugin(),
@@ -98,6 +99,7 @@ export function getConfig(options: {
     return {
       ...config,
 
+      // Add plugins
       plugins: [CopyManifestPlugin(), CopyHtmlPlugin(), CopyPngManifestPlugin(), CopyPngHtmlPlugin()].filter(Boolean),
 
       // Add production-specific settings
