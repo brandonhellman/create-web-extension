@@ -1,15 +1,15 @@
 export default {
-  index: 'Introduction',
-  another: 'Another Page',
-  advanced: 'Advanced (A Folder)',
+  index: {
+    title: 'Home',
+    type: 'page',
+    display: 'hidden',
+  },
   about: {
     title: 'About',
     type: 'page',
   },
-  contact: {
-    title: 'Contact ↗',
+  docs: {
+    title: 'Docs',
     type: 'page',
-    href: 'https://twitter.com/shuding_',
-    newWindow: true,
   },
 };
