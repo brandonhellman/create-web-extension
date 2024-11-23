@@ -20,7 +20,7 @@ export function CopyPngManifestPlugin() {
       if (isPng) {
         acc.push({
           from: path.join(pathToBrowserExt.root, value),
-          to: path.join(pathToBrowserExt.unpacked, value),
+          to: path.join(pathToBrowserExt.chromeDev, value),
         });
       }
     }

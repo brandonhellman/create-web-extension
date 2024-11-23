@@ -11,7 +11,7 @@ export function CopyHtmlPlugin() {
     .map((htmlFile) => {
       return {
         from: path.join(pathToBrowserExt.root, htmlFile),
-        to: path.join(pathToBrowserExt.unpacked, htmlFile),
+        to: path.join(pathToBrowserExt.chromeDev, htmlFile),
         transform(content: Buffer, absoluteFrom: string) {
           // Convert the buffer to a string
           const html = content.toString();

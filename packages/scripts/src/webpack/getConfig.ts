@@ -53,7 +53,7 @@ export function getConfig(options: {
     },
 
     output: {
-      path: pathToBrowserExt.unpacked,
+      path: pathToBrowserExt.chromeDev,
       clean: true, // Clean the output directory before emit
       filename: '[name].js',
       chunkFilename: '[name].chunk.js',
