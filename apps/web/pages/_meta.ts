@@ -4,12 +4,8 @@ export default {
     type: 'page',
     display: 'hidden',
   },
-  about: {
-    title: 'About',
-    type: 'page',
-  },
   docs: {
-    title: 'Docs',
+    title: 'Documentation',
     type: 'page',
   },
 };
