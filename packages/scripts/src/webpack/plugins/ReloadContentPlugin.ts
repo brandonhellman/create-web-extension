@@ -22,7 +22,7 @@ const banner = (port: number) => `
 })();
 `;
 
-export function ReloadContentScriptPlugin(options: { entry: webpack.EntryObject; port: number }) {
+export function ReloadContentPlugin(options: { entry: webpack.EntryObject; port: number }) {
   return new webpack.BannerPlugin({
     raw: true,
     entryOnly: true,

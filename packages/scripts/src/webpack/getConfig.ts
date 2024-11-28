@@ -1,13 +1,12 @@
 import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
-import { getEntries } from './getEntries';
 import { CopyHtmlPlugin } from './plugins/CopyHtmlPlugin';
 import { CopyManifestPlugin } from './plugins/CopyManifestPlugin';
 import { CopyPngHtmlPlugin } from './plugins/CopyPngHtmlPlugin';
 import { CopyPngManifestPlugin } from './plugins/CopyPngManifestPlugin';
 import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
-import { ReloadContentScriptPlugin } from './plugins/ReloadContentScriptPlugin';
+import { ReloadContentPlugin } from './plugins/ReloadContentPlugin';
 
 export function getConfig(options: {
   entry: {
@@ -83,7 +82,7 @@ export function getConfig(options: {
         CopyPngManifestPlugin(),
         CopyPngHtmlPlugin(),
         ReloadBackgroundPlugin({ entry: options.entry.background, port: options.port }),
-        ReloadContentScriptPlugin({ entry: options.entry.contentScript, port: options.port }),
+        ReloadContentPlugin({ entry: options.entry.contentScript, port: options.port }),
       ].filter(Boolean),
 
       // Add development-specific settings
