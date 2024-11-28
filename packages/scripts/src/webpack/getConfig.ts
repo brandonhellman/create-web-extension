@@ -7,6 +7,7 @@ import { CopyPngHtmlPlugin } from './plugins/CopyPngHtmlPlugin';
 import { CopyPngManifestPlugin } from './plugins/CopyPngManifestPlugin';
 import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
 import { ReloadContentPlugin } from './plugins/ReloadContentPlugin';
+import { ReloadPagePlugin } from './plugins/ReloadPagePlugin';
 
 export function getConfig(options: {
   entry: {
@@ -83,6 +84,7 @@ export function getConfig(options: {
         CopyPngHtmlPlugin(),
         ReloadBackgroundPlugin({ entry: options.entry.background, port: options.port }),
         ReloadContentPlugin({ entry: options.entry.contentScript, port: options.port }),
+        ReloadPagePlugin({ entry: options.entry.extensionPage, port: options.port }),
       ].filter(Boolean),
 
       // Add development-specific settings
