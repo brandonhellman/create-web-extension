@@ -20,8 +20,13 @@ program
 program
   .command('dev')
   .description('Start the web extension in development mode.')
-  .action(() => {
-    dev({ port: 9000 });
+  .option('-p, --port <number>', 'Port to run the development server on', '9000')
+  .action((options) => {
+    const port = Number(options.port);
+
+    dev({
+      port: port,
+    });
   });
 
 // Parse the arguments
