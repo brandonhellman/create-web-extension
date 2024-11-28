@@ -21,7 +21,7 @@ program
   .command('dev')
   .description('Start the web extension in development mode.')
   .action(() => {
-    dev();
+    dev({ port: 9000 });
   });
 
 // Parse the arguments

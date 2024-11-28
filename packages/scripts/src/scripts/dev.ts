@@ -8,15 +8,15 @@ import { getEntries } from '../webpack/getEntries';
 // Track WebSocket connections and webpack watcher
 let wss: WebSocketServer | null = null;
 let webpackWatcher: webpack.Watching | null = null;
-const WEBSOCKET_PORT = 9000;
+// const WEBSOCKET_PORT = 9000;
 
-function setupWebSocketServer() {
+function setupWebSocketServer(port: number) {
   if (wss) {
     wss.close();
     wss = null;
   }
 
-  wss = new WebSocketServer({ port: WEBSOCKET_PORT });
+  wss = new WebSocketServer({ port: port });
 
   wss.on('connection', (ws) => {
     Logger.info('Extension connected to dev server');
@@ -30,32 +30,60 @@ function setupWebSocketServer() {
     });
   });
 
-  Logger.info(`WebSocket server started on port ${WEBSOCKET_PORT}`);
+  Logger.info(`WebSocket server started on port ${port}`);
 }
 
-function notifyClientsToReload() {
-  if (!wss) return;
+function notifyClientsToReload(changedFiles: string[], entries: ReturnType<typeof getEntries>) {
+  if (!wss) {
+    return;
+  }
+
+  // Determine which entry types have changed
+  const backgroundChanged = Object.keys(entries.background).some((entry) =>
+    changedFiles.some((file) => file.includes(entry)),
+  );
+
+  const contentScriptChanged = Object.keys(entries.contentScript).some((entry) =>
+    changedFiles.some((file) => file.includes(entry)),
+  );
+
+  const extensionPageChanged = Object.keys(entries.extensionPage).some((entry) =>
+    changedFiles.some((file) => file.includes(entry)),
+  );
 
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send('reload');
-      Logger.info('Sent reload signal to extension');
+      if (backgroundChanged || contentScriptChanged) {
+        // If background or content scripts changed, reload both in sequence
+        client.send('reload-background');
+        Logger.info('Sent reload signal to background script');
+
+        // Add a small delay before reloading content scripts
+        setTimeout(() => {
+          client.send('reload-content');
+          Logger.info('Sent reload signal to content scripts');
+        }, 500); // 1 second delay to ensure background loads first
+      } else if (extensionPageChanged) {
+        // If only extension page changed, reload only that
+        client.send('reload-page');
+        Logger.info('Sent reload signal to extension pages');
+      }
     }
   });
 }
 
-export function dev() {
+export function dev(options: { port: number }) {
   Logger.info('Starting development build...');
 
   // Start WebSocket server
-  setupWebSocketServer();
+  setupWebSocketServer(options.port);
 
   const entries = getEntries();
 
   const config = getConfig({
     entry: entries,
     mode: 'development',
-    port: WEBSOCKET_PORT,
+    port: options.port,
   });
 
   webpackWatcher = webpack(config).watch(
@@ -91,9 +119,16 @@ export function dev() {
         });
       }
 
+      // Get list of changed files
+      const changedFiles =
+        info.chunks
+          ?.filter((chunk) => chunk.modules?.some((module) => module.moduleType === 'javascript/auto'))
+          .flatMap((chunk) => chunk.modules?.map((module) => module.nameForCondition || '') || [])
+          .filter((name) => name) || [];
+
       // Log successful build
       Logger.success(`Build completed in ${info.time}ms`);
-      notifyClientsToReload();
+      notifyClientsToReload(changedFiles, entries);
 
       // Optional: Log asset sizes
       info.assets?.forEach((asset) => {

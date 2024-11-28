@@ -6,7 +6,8 @@ const banner = (port: number) => `
     const ws = new WebSocket('ws://localhost:${port}');
         
     ws.onmessage = (event) => {
-      if (event.data === 'reload') {
+      // Only reload on background-specific reload message
+      if (event.data === 'reload-background') {
         chrome.runtime.reload();
       }
     };
