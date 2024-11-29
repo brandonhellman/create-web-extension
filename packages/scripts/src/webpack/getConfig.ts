@@ -17,6 +17,7 @@ export function getConfig(options: {
   };
   mode: 'development' | 'production';
   port: number;
+  reload: boolean;
 }): webpack.Configuration {
   const isDevelopment = options.mode === 'development';
   const isProduction = options.mode === 'production';
@@ -73,19 +74,22 @@ export function getConfig(options: {
   };
 
   if (isDevelopment) {
+    const basePlugins = [CopyManifestPlugin(), CopyHtmlPlugin(), CopyPngManifestPlugin(), CopyPngHtmlPlugin()];
+
+    // Only add reload plugins if auto reload is enabled
+    const reloadPlugins = options.reload
+      ? [
+          ReloadBackgroundPlugin({ entry: options.entry.background, port: options.port }),
+          ReloadContentPlugin({ entry: options.entry.contentScript, port: options.port }),
+          ReloadPagePlugin({ entry: options.entry.extensionPage, port: options.port }),
+        ]
+      : [];
+
     return {
       ...config,
 
       // Add plugins
-      plugins: [
-        CopyManifestPlugin(),
-        CopyHtmlPlugin(),
-        CopyPngManifestPlugin(),
-        CopyPngHtmlPlugin(),
-        ReloadBackgroundPlugin({ entry: options.entry.background, port: options.port }),
-        ReloadContentPlugin({ entry: options.entry.contentScript, port: options.port }),
-        ReloadPagePlugin({ entry: options.entry.extensionPage, port: options.port }),
-      ].filter(Boolean),
+      plugins: [...basePlugins, ...reloadPlugins].filter(Boolean),
 
       // Add development-specific settings
       devtool: 'inline-source-map',

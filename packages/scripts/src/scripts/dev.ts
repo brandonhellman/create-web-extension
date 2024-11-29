@@ -72,11 +72,13 @@ function notifyClientsToReload(changedFiles: string[], entries: ReturnType<typeo
   });
 }
 
-export function dev(options: { port: number }) {
+export function dev(options: { port: number; reload: boolean }) {
   Logger.info('Starting development build...');
 
-  // Start WebSocket server
-  setupWebSocketServer(options.port);
+  // Only start WebSocket server if auto reload is enabled
+  if (options.reload !== false) {
+    setupWebSocketServer(options.port);
+  }
 
   const entries = getEntries();
 
@@ -84,6 +86,7 @@ export function dev(options: { port: number }) {
     entry: entries,
     mode: 'development',
     port: options.port,
+    reload: options.reload,
   });
 
   webpackWatcher = webpack(config).watch(
@@ -128,7 +131,11 @@ export function dev(options: { port: number }) {
 
       // Log successful build
       Logger.success(`Build completed in ${info.time}ms`);
-      notifyClientsToReload(changedFiles, entries);
+
+      // Only notify clients if auto reload is enabled
+      if (options.reload) {
+        notifyClientsToReload(changedFiles, entries);
+      }
 
       // Optional: Log asset sizes
       info.assets?.forEach((asset) => {
