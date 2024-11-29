@@ -4,6 +4,7 @@ import { program } from 'commander';
 import { name, version } from '../package.json';
 import { build } from './scripts/build';
 import { dev } from './scripts/dev';
+import Logger from './utils/logger';
 
 // Setup the program
 program.name(name).version(version, '-v, --version').usage('<script> [option]');
@@ -21,11 +22,16 @@ program
   .command('dev')
   .description('Start the web extension in development mode.')
   .option('-p, --port <number>', 'Port to run the development server on', '9000')
+  .option('-r --reload <boolean>', 'Reload the extension when changes are made', 'true')
   .action((options) => {
     const port = Number(options.port);
+    const reload = options.reload === 'true';
+
+    Logger.info('options', options);
 
     dev({
       port: port,
+      reload: reload,
     });
   });
 
