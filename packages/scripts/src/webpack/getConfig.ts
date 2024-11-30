@@ -34,17 +34,34 @@ export function getConfig(options: {
     module: {
       rules: [
         {
+          // Handle TypeScript and React files
           test: /\.(ts|tsx)$/,
           use: {
-            loader: 'ts-loader',
+            loader: 'babel-loader',
             options: {
-              transpileOnly: isDevelopment, // Faster builds in development
-              compilerOptions: {
-                sourceMap: isDevelopment,
-              },
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-typescript',
+                ['@babel/preset-react', { runtime: 'automatic' }],
+              ],
+              // Enable caching for faster rebuilds
+              cacheDirectory: true,
             },
           },
           exclude: /node_modules/,
+        },
+        {
+          // Handle CSS files
+          test: /\.css$/,
+          use: [
+            'style-loader', // Injects CSS into the DOM
+            'css-loader',   // Handles CSS imports
+          ],
+        },
+        {
+          // Handle SVG files as React components
+          test: /\.svg$/,
+          use: ['@svgr/webpack'],
         },
       ],
     },
