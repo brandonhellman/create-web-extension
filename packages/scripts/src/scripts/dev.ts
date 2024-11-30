@@ -8,7 +8,6 @@ import { getEntries } from '../webpack/getEntries';
 // Track WebSocket connections and webpack watcher
 let wss: WebSocketServer | null = null;
 let webpackWatcher: webpack.Watching | null = null;
-// const WEBSOCKET_PORT = 9000;
 
 function setupWebSocketServer(port: number) {
   if (wss) {
@@ -19,14 +18,8 @@ function setupWebSocketServer(port: number) {
   wss = new WebSocketServer({ port: port });
 
   wss.on('connection', (ws) => {
-    Logger.info('Extension connected to dev server');
-
     ws.on('error', (error) => {
       Logger.error('WebSocket error:', error);
-    });
-
-    ws.on('close', () => {
-      Logger.info('Extension disconnected from dev server');
     });
   });
 
