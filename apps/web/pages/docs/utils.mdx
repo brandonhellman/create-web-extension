@@ -1,0 +1,88 @@
+# Utility Functions
+
+The `@browser-ext/utils` package provides a set of utility functions to help with common browser extension development tasks.
+
+## sleep
+
+A utility function that creates a promise that resolves after a specified time. Useful for adding delays in async operations.
+
+```typescript
+import { sleep } from '@browser-ext/utils';
+
+// Wait for 1 second
+await sleep(1000);
+```
+
+## waitForSelector
+
+Waits for an element matching a CSS selector to appear in the DOM. Returns a promise that resolves with the element or null if the timeout is reached.
+
+```typescript
+import { waitForSelector } from '@browser-ext/utils';
+
+// Basic usage
+const element = await waitForSelector<HTMLDivElement>('.my-class');
+
+// With a container element
+const container = document.querySelector('.container');
+const element = await waitForSelector<HTMLDivElement>('.my-class', container);
+
+// With a timeout
+const element = await waitForSelector<HTMLDivElement>('.my-class', undefined, 5000);
+```
+
+### Parameters
+
+- `selector`: The CSS selector to match
+- `container` (optional): The container element to search within
+- `maxWait` (optional): Maximum time to wait in milliseconds
+
+### Returns
+
+- Returns the element immediately if found
+- Returns a promise that resolves with:
+  - The element when found
+  - `null` if the maxWait timeout is reached
+
+## waitForSelectorAll
+
+Similar to `waitForSelector`, but waits for all elements matching a CSS selector. Returns a promise that resolves with an array of elements.
+
+```typescript
+import { waitForSelectorAll } from '@browser-ext/utils';
+
+// Basic usage
+const elements = await waitForSelectorAll<HTMLDivElement>('.my-class');
+
+// With a container element
+const container = document.querySelector('.container');
+const elements = await waitForSelectorAll<HTMLDivElement>('.my-class', container);
+
+// With a timeout
+const elements = await waitForSelectorAll<HTMLDivElement>('.my-class', undefined, 5000);
+```
+
+### Parameters
+
+- `selector`: The CSS selector to match
+- `container` (optional): The container element to search within
+- `maxWait` (optional): Maximum time to wait in milliseconds
+
+### Returns
+
+- Returns an array of elements immediately if found
+- Returns a promise that resolves with:
+  - An array of elements when found
+  - An empty array if the maxWait timeout is reached
+
+## Implementation Details
+
+Both `waitForSelector` and `waitForSelectorAll` use the MutationObserver API to efficiently watch for DOM changes. They:
+
+- Check immediately if the element(s) exist
+- If not found, observe DOM changes until:
+  - The element(s) are found
+  - The optional timeout is reached
+- Automatically clean up the observer when done
+
+This makes them ideal for extension content scripts where you need to wait for elements to appear on the page.

@@ -1,0 +1,102 @@
+# Webpack Configuration
+
+The build system uses a customized Webpack configuration optimized for browser extension development. This guide explains the key aspects of the build system.
+
+## Overview
+
+The webpack configuration handles:
+- TypeScript and React compilation
+- CSS processing
+- SVG handling
+- Code splitting
+- Development and production builds
+- Extension-specific file copying
+
+## Entry Points
+
+The build system handles three main types of entry points:
+
+```typescript
+{
+  background: webpack.EntryObject;    // Background scripts
+  contentScript: webpack.EntryObject;  // Content scripts
+  extensionPage: webpack.EntryObject;  // Extension pages
+}
+```
+
+## Development Mode
+
+In development mode (`npm run dev`), the build system provides:
+
+- Source maps for easier debugging
+- File system caching for faster rebuilds
+- Hot reload support for extension components
+- Automatic copying of manifest and HTML files
+- Development-specific optimizations
+
+### Auto Reload
+
+When auto reload is enabled, three plugins work together to provide seamless development:
+
+- `ReloadBackgroundPlugin`: Reloads background scripts
+- `ReloadContentPlugin`: Reloads content scripts
+- `ReloadPagePlugin`: Reloads extension pages
+
+## Production Mode
+
+In production mode (`npm run build`), the build system enables:
+
+- Code minification and optimization
+- Deterministic module IDs
+- Separate source maps
+- Production-level code splitting
+- Performance hints
+
+## File Processing
+
+### TypeScript and React
+```typescript
+{
+  test: /\.(ts|tsx)$/,
+  use: {
+    loader: 'babel-loader',
+    options: {
+      presets: [
+        '@babel/preset-env',
+        '@babel/preset-typescript',
+        ['@babel/preset-react', { runtime: 'automatic' }]
+      ]
+    }
+  }
+}
+```
+
+### CSS
+CSS files are processed using:
+- `style-loader`: Injects styles into the DOM
+- `css-loader`: Handles CSS imports and modules
+
+### SVG
+SVG files are automatically converted to React components using `@svgr/webpack`.
+
+## Extension-specific Plugins
+
+The build system includes several custom plugins for browser extension development:
+
+- `CopyManifestPlugin`: Handles manifest.json processing
+- `CopyHtmlPlugin`: Processes HTML files
+- `CopyPngManifestPlugin`: Handles PNG assets referenced in manifest
+- `CopyPngHtmlPlugin`: Processes PNG assets referenced in HTML
+
+## Code Splitting
+
+Code splitting behavior differs between development and production:
+
+- **Development**: Splitting is minimized for faster builds
+- **Production**: Chunks are split when they exceed 20KB for optimal loading
+
+## Performance
+
+- Development mode disables performance hints for faster builds
+- Production mode enables warnings for large chunks
+- Both modes use filesystem caching for improved build times
