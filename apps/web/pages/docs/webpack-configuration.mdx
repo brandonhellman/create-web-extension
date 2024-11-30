@@ -83,10 +83,27 @@ SVG files are automatically converted to React components using `@svgr/webpack`.
 
 The build system includes several custom plugins for browser extension development:
 
-- `CopyManifestPlugin`: Handles manifest.json processing
-- `CopyHtmlPlugin`: Processes HTML files
-- `CopyPngManifestPlugin`: Handles PNG assets referenced in manifest
-- `CopyPngHtmlPlugin`: Processes PNG assets referenced in HTML
+### CopyManifestPlugin
+Processes and copies the manifest.json file:
+- Fills in missing fields from package.json
+- Updates file extensions for TypeScript/React files
+- Validates manifest structure
+
+### CopyHtmlPlugin
+Handles HTML files:
+- Copies HTML files from project root
+- Updates script tag extensions for TypeScript/React files
+
+### CopyPngManifestPlugin and CopyPngHtmlPlugin
+Handle PNG assets:
+- Copy PNG files referenced in manifest.json
+- Copy PNG files referenced in HTML files
+
+### CopyWebAccessibleResourcesPlugin
+Handles web accessible resources:
+- Processes the `web_accessible_resources` field in manifest.json
+- Copies matched files to the build directory
+- Maintains directory structure of copied files
 
 ## Code Splitting
 

@@ -5,6 +5,7 @@ import { CopyHtmlPlugin } from './plugins/CopyHtmlPlugin';
 import { CopyManifestPlugin } from './plugins/CopyManifestPlugin';
 import { CopyPngHtmlPlugin } from './plugins/CopyPngHtmlPlugin';
 import { CopyPngManifestPlugin } from './plugins/CopyPngManifestPlugin';
+import { CopyWebAccessibleResourcesPlugin } from './plugins/CopyWebAccessibleResourcesPlugin';
 import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
 import { ReloadContentPlugin } from './plugins/ReloadContentPlugin';
 import { ReloadPagePlugin } from './plugins/ReloadPagePlugin';
@@ -55,7 +56,7 @@ export function getConfig(options: {
           test: /\.css$/,
           use: [
             'style-loader', // Injects CSS into the DOM
-            'css-loader',   // Handles CSS imports
+            'css-loader', // Handles CSS imports
           ],
         },
         {
@@ -91,7 +92,13 @@ export function getConfig(options: {
   };
 
   if (isDevelopment) {
-    const basePlugins = [CopyManifestPlugin(), CopyHtmlPlugin(), CopyPngManifestPlugin(), CopyPngHtmlPlugin()];
+    const basePlugins = [
+      CopyManifestPlugin(),
+      CopyHtmlPlugin(),
+      CopyPngManifestPlugin(),
+      CopyPngHtmlPlugin(),
+      CopyWebAccessibleResourcesPlugin(),
+    ];
 
     // Only add reload plugins if auto reload is enabled
     const reloadPlugins = options.reload
@@ -122,7 +129,13 @@ export function getConfig(options: {
       ...config,
 
       // Add plugins
-      plugins: [CopyManifestPlugin(), CopyHtmlPlugin(), CopyPngManifestPlugin(), CopyPngHtmlPlugin()].filter(Boolean),
+      plugins: [
+        CopyManifestPlugin(),
+        CopyHtmlPlugin(),
+        CopyPngManifestPlugin(),
+        CopyPngHtmlPlugin(),
+        CopyWebAccessibleResourcesPlugin(),
+      ].filter(Boolean),
 
       // Add production-specific settings
       devtool: 'source-map', // Generates separate source maps
