@@ -65,7 +65,7 @@ function notifyClientsToReload(changedFiles: string[], entries: ReturnType<typeo
   });
 }
 
-export function dev(options: { port: number; reload: boolean }) {
+export function dev(options: { port: number; reload: boolean; verbose: boolean }) {
   Logger.info('Starting development build...');
 
   // Only start WebSocket server if auto reload is enabled
@@ -130,10 +130,12 @@ export function dev(options: { port: number; reload: boolean }) {
         notifyClientsToReload(changedFiles, entries);
       }
 
-      // Optional: Log asset sizes
-      info.assets?.forEach((asset) => {
-        Logger.info(`Asset: ${asset.name} (${formatBytes(asset.size)})`);
-      });
+      // Only log asset sizes in verbose mode
+      if (options.verbose) {
+        info.assets?.forEach((asset) => {
+          Logger.info(`Asset: ${asset.name} (${formatBytes(asset.size)})`);
+        });
+      }
     },
   );
 
