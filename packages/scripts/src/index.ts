@@ -22,16 +22,19 @@ program
   .command('dev')
   .description('Start the browser extension in development mode.')
   .option('-p, --port <number>', 'Port to run the development server on', '9876')
-  .option('-r --reload <boolean>', 'Reload the extension when changes are made', 'true')
+  .option('-r, --reload <boolean>', 'Reload the extension when changes are made', 'true')
+  .option('-v, --verbose <boolean>', 'Enable verbose logging including asset details', 'false')
   .action((options) => {
     const port = Number(options.port);
     const reload = options.reload === 'true';
+    const verbose = options.verbose === 'true';
 
     Logger.info('options', options);
 
     dev({
       port: port,
       reload: reload,
+      verbose: verbose,
     });
   });
 
