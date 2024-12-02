@@ -12,7 +12,7 @@ program.name(name).version(version, '-v, --version').usage('<script> [option]');
 // Add the build command
 program
   .command('build')
-  .description('Build the web extension for production.')
+  .description('Build the browser extension for production.')
   .action(() => {
     build();
   });
@@ -20,7 +20,7 @@ program
 // Add the start command
 program
   .command('dev')
-  .description('Start the web extension in development mode.')
+  .description('Start the browser extension in development mode.')
   .option('-p, --port <number>', 'Port to run the development server on', '9876')
   .option('-r --reload <boolean>', 'Reload the extension when changes are made', 'true')
   .action((options) => {
