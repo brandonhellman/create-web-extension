@@ -21,7 +21,7 @@ program
 program
   .command('dev')
   .description('Start the web extension in development mode.')
-  .option('-p, --port <number>', 'Port to run the development server on', '9000')
+  .option('-p, --port <number>', 'Port to run the development server on', '9876')
   .option('-r --reload <boolean>', 'Reload the extension when changes are made', 'true')
   .action((options) => {
     const port = Number(options.port);
