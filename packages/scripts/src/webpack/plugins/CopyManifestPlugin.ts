@@ -3,6 +3,10 @@ import fs from 'fs-extra';
 
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
+function replaceFileExtension(extension: string) {
+  return extension.replace(/\.(jsx|tsx|ts)/, '.js');
+}
+
 // Replace special values in the manifest.json file and then copy it to the unpacked folder
 export function CopyManifestPlugin() {
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
@@ -33,17 +37,14 @@ export function CopyManifestPlugin() {
 
           // Replace file extensions in background.service_worker
           if (manifestJson.background?.service_worker) {
-            manifestJson.background.service_worker = manifestJson.background.service_worker.replace(
-              /\.(jsx|ts|tsx)/,
-              '.js',
-            );
+            manifestJson.background.service_worker = replaceFileExtension(manifestJson.background.service_worker);
           }
 
           // Replace file extensions in content_scripts
           if (manifestJson.content_scripts) {
             manifestJson.content_scripts.forEach((contentScript: { js: string[] }) => {
               if (contentScript.js) {
-                contentScript.js = contentScript.js.map((js) => js.replace(/\.(jsx|ts|tsx)/, '.js'));
+                contentScript.js = contentScript.js.map(replaceFileExtension);
               }
             });
           }
@@ -52,7 +53,7 @@ export function CopyManifestPlugin() {
           if (manifestJson.web_accessible_resources) {
             manifestJson.web_accessible_resources.forEach((resource: { resources: string[] }) => {
               if (resource.resources) {
-                resource.resources = resource.resources.map((res) => res.replace(/\.(jsx|ts|tsx)/, '.js'));
+                resource.resources = resource.resources.map(replaceFileExtension);
               }
             });
           }
