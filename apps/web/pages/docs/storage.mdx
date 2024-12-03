@@ -1,0 +1,66 @@
+# Storage Package
+
+The `@browser-ext/storage` package provides a simple wrapper around Chrome's storage API for browser extensions.
+
+## Installation
+
+```bash
+npm install @browser-ext/storage
+```
+
+## API
+
+### get\<T\>(key: string): Promise\<T | undefined\>
+
+Retrieves a value from local storage.
+
+```typescript
+import { storage } from '@browser-ext/storage';
+
+// Get a stored value
+const value = await storage.get<string>('myKey');
+```
+
+### set\<T\>(key: string, value: T): Promise\<void\>
+
+Stores a value in local storage.
+
+```typescript
+import { storage } from '@browser-ext/storage';
+
+// Store a value
+await storage.set('myKey', 'myValue');
+
+// Store an object
+await storage.set('user', { name: 'John', age: 30 });
+```
+
+### remove(key: string): Promise\<void\>
+
+Removes a value from local storage.
+
+```typescript
+import { storage } from '@browser-ext/storage';
+
+// Remove a stored value
+await storage.remove('myKey');
+```
+
+## Example Usage
+
+```typescript
+import { storage } from '@browser-ext/storage';
+
+// Store user preferences
+await storage.set('theme', 'dark');
+await storage.set('notifications', true);
+
+// Retrieve user preferences
+const theme = await storage.get<string>('theme');
+const notifications = await storage.get<boolean>('notifications');
+
+// Remove user preferences
+await storage.remove('theme');
+```
+
+All methods return Promises and work with Chrome's local storage. The package provides type safety through TypeScript generics.

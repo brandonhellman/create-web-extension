@@ -1,0 +1,48 @@
+# Scripts Package
+
+The `@browser-ext/scripts` package provides CLI commands for building and developing browser extensions.
+
+## Installation
+
+```bash
+npm install @browser-ext/scripts
+```
+
+## Commands
+
+### Build Command
+
+Builds the browser extension for production.
+
+```bash
+browser-ext build
+```
+
+### Dev Command
+
+Starts the browser extension in development mode with hot reloading.
+
+```bash
+browser-ext dev [options]
+```
+
+#### Options
+
+- `-p, --port <number>` - Port to run the development server on (default: "9876")
+- `-r, --reload <boolean>` - Reload the extension when changes are made (default: "true")
+- `-v, --verbose <boolean>` - Enable verbose logging including asset details (default: "false")
+
+## Example Usage
+
+```bash
+# Start development server
+browser-ext dev
+
+# Start on custom port with verbose logging
+browser-ext dev --port 3000 --verbose true
+
+# Build for production
+browser-ext build
+```
+
+The development server provides hot reloading capabilities, automatically rebuilding and reloading your extension when changes are detected in your source files.
