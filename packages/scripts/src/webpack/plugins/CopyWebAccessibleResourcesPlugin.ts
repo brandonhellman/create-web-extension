@@ -6,8 +6,9 @@ import { glob } from 'glob';
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
 export function CopyWebAccessibleResourcesPlugin() {
-  const chromeTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.chromeProd : pathToBrowserExt.chromeDev;
-  const firefoxTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.firefoxProd : pathToBrowserExt.firefoxDev;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const chromeTo = isDevelopment ? pathToBrowserExt.chromeDev : pathToBrowserExt.chromeProd;
+  const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 
   const manifestPath = path.join(pathToBrowserExt.root, 'manifest.json');
   const manifestJson = fs.readJSONSync(manifestPath);

@@ -10,8 +10,9 @@ function replaceFileExtension(extension: string) {
 
 // Replace special values in the manifest.json file and then copy it to the unpacked folder
 export function CopyManifestPlugin() {
-  const chromeTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.chromeProd : pathToBrowserExt.chromeDev;
-  const firefoxTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.firefoxProd : pathToBrowserExt.firefoxDev;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const chromeTo = isDevelopment ? pathToBrowserExt.chromeDev : pathToBrowserExt.chromeProd;
+  const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
 

@@ -6,8 +6,9 @@ import fs from 'fs-extra';
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
 export function CopyPngManifestPlugin() {
-  const chromeTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.chromeProd : pathToBrowserExt.chromeDev;
-  const firefoxTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.firefoxProd : pathToBrowserExt.firefoxDev;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const chromeTo = isDevelopment ? pathToBrowserExt.chromeDev : pathToBrowserExt.chromeProd;
+  const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
 

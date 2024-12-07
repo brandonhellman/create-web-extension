@@ -6,8 +6,9 @@ import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
 // Find any .html files in the root of the project and copy them to the unpacked folder
 export function CopyHtmlPlugin() {
-  const chromeTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.chromeProd : pathToBrowserExt.chromeDev;
-  const firefoxTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.firefoxProd : pathToBrowserExt.firefoxDev;
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const chromeTo = isDevelopment ? pathToBrowserExt.chromeDev : pathToBrowserExt.chromeProd;
+  const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 
   const patterns = glob
     .sync('**/*.html', {
