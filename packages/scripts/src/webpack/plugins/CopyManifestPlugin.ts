@@ -1,3 +1,4 @@
+import path from 'path';
 import CopyPlugin from 'copy-webpack-plugin';
 import fs from 'fs-extra';
 
@@ -9,13 +10,16 @@ function replaceFileExtension(extension: string) {
 
 // Replace special values in the manifest.json file and then copy it to the unpacked folder
 export function CopyManifestPlugin() {
+  const chromeTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.chromeProd : pathToBrowserExt.chromeDev;
+  const firefoxTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.firefoxProd : pathToBrowserExt.firefoxDev;
+
   const packageJson = fs.readJSONSync(pathToBrowserExt.packageJson);
 
   return new CopyPlugin({
     patterns: [
       {
         from: './manifest.json',
-        to: 'manifest.json',
+        to: path.join(chromeTo, 'manifest.json'),
         transform(content) {
           // Parse the manifest template
           const manifestJson = JSON.parse(content.toString());

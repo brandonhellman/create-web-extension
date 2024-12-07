@@ -72,7 +72,6 @@ export function getConfig(options: {
     },
 
     output: {
-      path: pathToBrowserExt.chromeDev,
       clean: true, // Clean the output directory before emit
       filename: '[name].js',
       chunkFilename: '[name].chunk.js',
@@ -121,6 +120,10 @@ export function getConfig(options: {
       cache: {
         type: 'filesystem',
       },
+      output: {
+        ...config.output,
+        path: pathToBrowserExt.chromeDev,
+      },
     };
   }
 
@@ -143,6 +146,10 @@ export function getConfig(options: {
         ...config.optimization,
         minimize: true,
         moduleIds: 'deterministic',
+      },
+      output: {
+        ...config.output,
+        path: pathToBrowserExt.chromeProd,
       },
     };
   }

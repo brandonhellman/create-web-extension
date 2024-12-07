@@ -13,4 +13,7 @@ export const pathToBrowserExt = {
   tsconfigJson: resolveToBrowserExt('tsconfig.json'),
   build: resolveToBrowserExt('build'),
   chromeDev: resolveToBrowserExt('build/chrome-dev/'),
+  chromeProd: resolveToBrowserExt('build/chrome-prod/'),
+  firefoxDev: resolveToBrowserExt('build/firefox-dev/'),
+  firefoxProd: resolveToBrowserExt('build/firefox-prod/'),
 };

@@ -6,6 +6,9 @@ import fs from 'fs-extra';
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
 export function CopyPngManifestPlugin() {
+  const chromeTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.chromeProd : pathToBrowserExt.chromeDev;
+  const firefoxTo = process.env.NODE_ENV === 'production' ? pathToBrowserExt.firefoxProd : pathToBrowserExt.firefoxDev;
+
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
 
   // Flatten the manifest.json object so we can search for any .png files easily
@@ -20,7 +23,7 @@ export function CopyPngManifestPlugin() {
       if (isPng) {
         acc.push({
           from: path.join(pathToBrowserExt.root, value),
-          to: path.join(pathToBrowserExt.chromeDev, value),
+          to: path.join(chromeTo, value),
         });
       }
     }
