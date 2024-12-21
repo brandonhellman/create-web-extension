@@ -4,6 +4,11 @@ const banner = (port: number) => `
 (() => {
   function connect() {
     const ws = new WebSocket('ws://localhost:${port}');
+    
+    // Handle connection errors gracefully without throwing
+    ws.onerror = () => {
+      console.log('WebSocket connection failed. Retrying in 1s...');
+    };
         
     ws.onmessage = (event) => {
       // Only reload on content-script specific reload message
