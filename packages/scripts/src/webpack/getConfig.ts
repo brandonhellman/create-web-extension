@@ -101,7 +101,7 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
   };
 
   const basePlugins = [
-    CopyManifestPlugin(),
+    CopyManifestPlugin(isDevelopment),
     CopyHtmlPlugin(),
     CopyPngManifestPlugin(),
     CopyPngHtmlPlugin(),
