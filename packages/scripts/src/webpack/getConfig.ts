@@ -10,16 +10,25 @@ import { ReloadBackgroundPlugin } from './plugins/ReloadBackgroundPlugin';
 import { ReloadContentPlugin } from './plugins/ReloadContentPlugin';
 import { ReloadPagePlugin } from './plugins/ReloadPagePlugin';
 
-export function getConfig(options: {
+interface ConfigOptions {
   entry: {
     background: webpack.EntryObject;
     contentScript: webpack.EntryObject;
     extensionPage: webpack.EntryObject;
   };
-  mode: 'development' | 'production';
+}
+
+interface ConfigOptionsDevelopment extends ConfigOptions {
+  mode: 'development';
   port: number;
   reload: boolean;
-}): webpack.Configuration {
+}
+
+interface ConfigOptionsProduction extends ConfigOptions {
+  mode: 'production';
+}
+
+export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProduction): webpack.Configuration {
   const isDevelopment = options.mode === 'development';
   const isProduction = options.mode === 'production';
 
@@ -90,15 +99,15 @@ export function getConfig(options: {
     },
   };
 
-  if (isDevelopment) {
-    const basePlugins = [
-      CopyManifestPlugin(),
-      CopyHtmlPlugin(),
-      CopyPngManifestPlugin(),
-      CopyPngHtmlPlugin(),
-      CopyWebAccessibleResourcesPlugin(),
-    ];
+  const basePlugins = [
+    CopyManifestPlugin(),
+    CopyHtmlPlugin(),
+    CopyPngManifestPlugin(),
+    CopyPngHtmlPlugin(),
+    CopyWebAccessibleResourcesPlugin(),
+  ];
 
+  if (isDevelopment) {
     // Only add reload plugins if auto reload is enabled
     const reloadPlugins = options.reload
       ? [
@@ -132,13 +141,7 @@ export function getConfig(options: {
       ...config,
 
       // Add plugins
-      plugins: [
-        CopyManifestPlugin(),
-        CopyHtmlPlugin(),
-        CopyPngManifestPlugin(),
-        CopyPngHtmlPlugin(),
-        CopyWebAccessibleResourcesPlugin(),
-      ].filter(Boolean),
+      plugins: [...basePlugins].filter(Boolean),
 
       // Add production-specific settings
       devtool: 'source-map', // Generates separate source maps
