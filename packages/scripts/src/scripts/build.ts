@@ -1,10 +1,11 @@
 import webpack from 'webpack';
+
 import { getConfig } from '../webpack/getConfig';
 import { getEntries } from '../webpack/getEntries';
 
 export function build() {
   console.log('Running build...');
-  
+
   // Get all entry points from manifest and HTML files
   const entries = getEntries();
 
@@ -25,21 +26,26 @@ export function build() {
     }
 
     if (stats?.hasErrors()) {
-      console.error('Build failed with errors:', stats.toString({
-        colors: true,
-        errorDetails: true,
-      }));
+      console.error(
+        'Build failed with errors:',
+        stats.toString({
+          colors: true,
+          errorDetails: true,
+        }),
+      );
       process.exit(1);
     }
 
     // Log success and stats
-    console.log(stats?.toString({
-      colors: true,
-      modules: false,
-      children: false,
-      chunks: false,
-      chunkModules: false,
-    }));
+    console.log(
+      stats?.toString({
+        colors: true,
+        modules: false,
+        children: false,
+        chunks: false,
+        chunkModules: false,
+      }),
+    );
 
     // Close the compiler
     compiler.close((closeErr) => {
