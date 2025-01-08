@@ -90,7 +90,8 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
       splitChunks: {
         chunks: 'all',
         name: 'vendor',
-        minSize: isDevelopment ? 999999999 : 20000, // Don't split chunks in development for faster builds
+        minSize: 999999999, // Don't split chunks
+        // minSize: isDevelopment ? 999999999 : 20000, // Don't split chunks in development for faster builds
       },
     },
 
@@ -120,19 +121,20 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
     return {
       ...config,
 
-      // Add plugins
-      plugins: [...basePlugins, ...reloadPlugins].filter(Boolean),
-
-      // Add development-specific settings
-      devtool: 'inline-source-map',
-      stats: 'errors-warnings',
       cache: {
         type: 'filesystem',
       },
+
+      devtool: 'inline-source-map',
+
       output: {
         ...config.output,
         path: pathToBrowserExt.chromeDev,
       },
+
+      plugins: [...basePlugins, ...reloadPlugins].filter(Boolean),
+
+      stats: 'errors-warnings',
     };
   }
 
@@ -140,20 +142,21 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
     return {
       ...config,
 
-      // Add plugins
-      plugins: [...basePlugins].filter(Boolean),
+      // devtool: 'source-map', // Generates separate source maps
+      devtool: 'inline-source-map',
 
-      // Add production-specific settings
-      devtool: 'source-map', // Generates separate source maps
       optimization: {
         ...config.optimization,
-        minimize: true,
-        moduleIds: 'deterministic',
+        // minimize: true,
+        // moduleIds: 'deterministic',
       },
+
       output: {
         ...config.output,
         path: pathToBrowserExt.chromeProd,
       },
+
+      plugins: [...basePlugins].filter(Boolean),
     };
   }
 
