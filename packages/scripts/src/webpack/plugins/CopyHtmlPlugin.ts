@@ -5,8 +5,7 @@ import { glob } from 'glob';
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
 // Find any .html files in the root of the project and copy them to the unpacked folder
-export function CopyHtmlPlugin() {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+export function CopyHtmlPlugin(isDevelopment: boolean) {
   const chromeTo = isDevelopment ? pathToBrowserExt.chromeDev : pathToBrowserExt.chromeProd;
   const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 

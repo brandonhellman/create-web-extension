@@ -102,10 +102,10 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
 
   const basePlugins = [
     CopyManifestPlugin(isDevelopment),
-    CopyHtmlPlugin(),
-    CopyPngManifestPlugin(),
-    CopyPngHtmlPlugin(),
-    CopyWebAccessibleResourcesPlugin(),
+    CopyHtmlPlugin(isDevelopment),
+    CopyPngManifestPlugin(isDevelopment),
+    CopyPngHtmlPlugin(isDevelopment),
+    CopyWebAccessibleResourcesPlugin(isDevelopment),
   ];
 
   if (isDevelopment) {

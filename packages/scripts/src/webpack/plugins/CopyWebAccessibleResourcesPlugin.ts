@@ -5,8 +5,7 @@ import { glob } from 'glob';
 
 import { pathToBrowserExt } from '../../utils/pathToBrowserExt';
 
-export function CopyWebAccessibleResourcesPlugin() {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+export function CopyWebAccessibleResourcesPlugin(isDevelopment: boolean) {
   const chromeTo = isDevelopment ? pathToBrowserExt.chromeDev : pathToBrowserExt.chromeProd;
   const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 

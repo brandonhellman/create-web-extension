@@ -1,3 +1,3 @@
-export function CopyPngHtmlPlugin() {
+export function CopyPngHtmlPlugin(isDevelopment: boolean) {
   return null;
 }
