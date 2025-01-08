@@ -12,8 +12,6 @@ export function build() {
   const config = getConfig({
     entry: entries,
     mode: 'production',
-    port: 0, // Not used in production
-    reload: false, // No auto-reload in production
   });
 
   // Create webpack compiler
