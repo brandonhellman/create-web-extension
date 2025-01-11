@@ -30,6 +30,7 @@
     "fs-extra": "^11.2.0",
     "glob": "^11.0.0",
     "jsdom": "^25.0.1",
+    "postcss-loader": "^8.1.1",
     "style-loader": "^4.0.0",
     "webpack": "^5.96.1",
     "webpack-ext-reloader": "^1.1.13",

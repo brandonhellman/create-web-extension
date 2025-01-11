@@ -66,6 +66,7 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
           use: [
             'style-loader', // Injects CSS into the DOM
             'css-loader', // Handles CSS imports
+            'postcss-loader', // Process PostCSS (including Tailwind)
           ],
         },
         {
