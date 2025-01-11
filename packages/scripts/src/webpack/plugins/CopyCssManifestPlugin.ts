@@ -32,30 +32,15 @@ export function CopyCssManifestPlugin(isDevelopment: boolean) {
 
               if (fs.existsSync(postcssConfigPath)) {
                 const postcssConfig = require(postcssConfigPath);
+                const pluginConfig = postcssConfig.plugins;
 
-                // Handle plugins from config
-                const configPlugins =
-                  typeof postcssConfig === 'function' ? postcssConfig().plugins : postcssConfig.plugins;
-
-                plugins = await Promise.all(
-                  configPlugins.map(async (plugin: any) => {
-                    if (typeof plugin === 'string') {
-                      // If plugin is a string, require it and initialize
-                      const pluginModule = require(plugin);
-                      return pluginModule();
-                    } else if (Array.isArray(plugin)) {
-                      // Handle [plugin, options] format
-                      const [pluginName, options] = plugin;
-                      const pluginModule = require(pluginName);
-                      return pluginModule(options);
-                    } else if (typeof plugin === 'function') {
-                      // If it's already a function, use it directly
-                      return plugin;
-                    }
-                    // If it's already initialized, use it as is
-                    return plugin;
-                  }),
-                );
+                // Handle object-style plugin configuration
+                if (pluginConfig && typeof pluginConfig === 'object') {
+                  plugins = Object.entries(pluginConfig).map(([pluginName, pluginOptions]) => {
+                    const plugin = require(pluginName);
+                    return plugin(pluginOptions);
+                  });
+                }
               }
 
               const result = await postcss(plugins).process(content.toString(), {
@@ -66,7 +51,7 @@ export function CopyCssManifestPlugin(isDevelopment: boolean) {
               return result.css;
             } catch (error) {
               console.error('Error processing CSS:', error);
-              return content; // Return original content if processing fails
+              return content;
             }
           },
         });
