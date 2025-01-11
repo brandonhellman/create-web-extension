@@ -1,0 +1,8 @@
+.popup-container {
+  display: flex;
+  height: 24rem; /* h-96 */
+  width: 24rem; /* w-96 */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
