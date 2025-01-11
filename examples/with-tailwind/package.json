@@ -12,7 +12,7 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@browser-ext/scripts": "^0.0.32",
+    "@browser-ext/scripts": "^0.0.33",
     "@types/chrome": "^0.0.287",
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.1",
