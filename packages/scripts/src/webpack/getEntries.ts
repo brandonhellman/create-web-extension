@@ -40,10 +40,19 @@ function getContentScriptEntries(manifestJson: any) {
   const contentScripts = manifestJson.content_scripts;
 
   if (contentScripts) {
-    contentScripts.forEach((contentScript: { js: string[] }) => {
+    contentScripts.forEach((contentScript: { js?: string[]; css?: string[] }) => {
+      // Process JavaScript files
       if (contentScript.js) {
         contentScript.js.forEach((js: string) => {
           const entry = getEntry(js);
+          entries[entry.name] = entry.path;
+        });
+      }
+
+      // Process CSS files
+      if (contentScript.css) {
+        contentScript.css.forEach((css: string) => {
+          const entry = getEntry(css);
           entries[entry.name] = entry.path;
         });
       }
