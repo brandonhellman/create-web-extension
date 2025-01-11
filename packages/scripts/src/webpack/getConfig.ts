@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
+import { CopyCssManifestPlugin } from './plugins/CopyCssManifestPlugin';
 import { CopyHtmlPlugin } from './plugins/CopyHtmlPlugin';
 import { CopyManifestPlugin } from './plugins/CopyManifestPlugin';
 import { CopyPngHtmlPlugin } from './plugins/CopyPngHtmlPlugin';
@@ -103,6 +104,7 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
 
   const basePlugins = [
     CopyManifestPlugin(isDevelopment),
+    CopyCssManifestPlugin(isDevelopment),
     CopyHtmlPlugin(isDevelopment),
     CopyPngManifestPlugin(isDevelopment),
     CopyPngHtmlPlugin(isDevelopment),
