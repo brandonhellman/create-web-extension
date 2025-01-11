@@ -1,3 +1,4 @@
+import { createRequire } from 'module';
 import path from 'path';
 import CopyPlugin from 'copy-webpack-plugin';
 import { flatten } from 'flat';
@@ -11,11 +12,11 @@ export function CopyCssManifestPlugin(isDevelopment: boolean) {
   const firefoxTo = isDevelopment ? pathToBrowserExt.firefoxDev : pathToBrowserExt.firefoxProd;
 
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
-
-  // Flatten the manifest.json object so we can search for any .css files easily
   const flatManifestJson = flatten<any, any>(manifestJson);
 
-  // Find any .css files in the manifest.json and copy them to the unpacked folder
+  // Create a require function that can be used in ESM
+  const require = createRequire(import.meta.url);
+
   const patterns = Object.values(flatManifestJson).reduce<any[]>((acc, value) => {
     if (typeof value === 'string') {
       const parsed = path.parse(value);
@@ -26,17 +27,26 @@ export function CopyCssManifestPlugin(isDevelopment: boolean) {
           from: path.join(pathToBrowserExt.root, value),
           to: path.join(chromeTo, value),
           transform: async (content: Buffer) => {
-            // Load PostCSS config from the browser extension root
-            const postcssConfigPath = path.join(pathToBrowserExt.root, 'postcss.config.js');
-            const postcssConfig = fs.existsSync(postcssConfigPath) ? require(postcssConfigPath) : { plugins: [] };
+            try {
+              // Look for PostCSS config
+              const postcssConfigPath = path.join(pathToBrowserExt.root, 'postcss.config.js');
+              let plugins = [];
 
-            // Process with PostCSS
-            const result = await postcss(postcssConfig.plugins).process(content.toString(), {
-              from: path.join(pathToBrowserExt.root, value),
-              to: path.join(chromeTo, value),
-            });
+              if (fs.existsSync(postcssConfigPath)) {
+                const postcssConfig = require(postcssConfigPath);
+                plugins = postcssConfig.plugins || [];
+              }
 
-            return result.css;
+              const result = await postcss(plugins).process(content.toString(), {
+                from: path.join(pathToBrowserExt.root, value),
+                to: path.join(chromeTo, value),
+              });
+
+              return result.css;
+            } catch (error) {
+              console.error('Error processing CSS:', error);
+              return content; // Return original content if processing fails
+            }
           },
         });
       }
