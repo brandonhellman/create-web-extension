@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "with-all",
-  "description": "@browser-ext example with all the stuff",
+  "description": "@browser-ext example with all the examples",
   "version": "0.1.0",
   "scripts": {
     "build": "browser-ext build",
