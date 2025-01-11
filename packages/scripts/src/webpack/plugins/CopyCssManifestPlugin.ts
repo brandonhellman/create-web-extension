@@ -14,7 +14,6 @@ export function CopyCssManifestPlugin(isDevelopment: boolean) {
   const manifestJson = fs.readJSONSync(pathToBrowserExt.manifestJson);
   const flatManifestJson = flatten<any, any>(manifestJson);
 
-  // Create a require function that can be used in ESM
   const require = createRequire(import.meta.url);
 
   const patterns = Object.values(flatManifestJson).reduce<any[]>((acc, value) => {
@@ -28,13 +27,35 @@ export function CopyCssManifestPlugin(isDevelopment: boolean) {
           to: path.join(chromeTo, value),
           transform: async (content: Buffer) => {
             try {
-              // Look for PostCSS config
               const postcssConfigPath = path.join(pathToBrowserExt.root, 'postcss.config.js');
               let plugins = [];
 
               if (fs.existsSync(postcssConfigPath)) {
                 const postcssConfig = require(postcssConfigPath);
-                plugins = postcssConfig.plugins || [];
+
+                // Handle plugins from config
+                const configPlugins =
+                  typeof postcssConfig === 'function' ? postcssConfig().plugins : postcssConfig.plugins;
+
+                plugins = await Promise.all(
+                  configPlugins.map(async (plugin: any) => {
+                    if (typeof plugin === 'string') {
+                      // If plugin is a string, require it and initialize
+                      const pluginModule = require(plugin);
+                      return pluginModule();
+                    } else if (Array.isArray(plugin)) {
+                      // Handle [plugin, options] format
+                      const [pluginName, options] = plugin;
+                      const pluginModule = require(pluginName);
+                      return pluginModule(options);
+                    } else if (typeof plugin === 'function') {
+                      // If it's already a function, use it directly
+                      return plugin;
+                    }
+                    // If it's already initialized, use it as is
+                    return plugin;
+                  }),
+                );
               }
 
               const result = await postcss(plugins).process(content.toString(), {
