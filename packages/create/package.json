@@ -5,12 +5,20 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "create-browser-ext": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
   },
+  "dependencies": {
+    "@inquirer/prompts": "^3.3.0",
+    "commander": "^11.1.0"
+  },
   "devDependencies": {
     "@repo/typescript-config": "*",
+    "@types/node": "^20.10.6",
     "tsup": "^8.3.5",
     "typescript": "latest"
   }
