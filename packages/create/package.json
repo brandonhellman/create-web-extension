@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@inquirer/prompts": "^3.3.0",
-    "commander": "^11.1.0"
+    "commander": "^11.1.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@repo/typescript-config": "*",
