@@ -3,6 +3,7 @@ import webpack from 'webpack';
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { CopyCssManifestPlugin } from './plugins/CopyCssManifestPlugin';
 import { CopyHtmlPlugin } from './plugins/CopyHtmlPlugin';
+import { CopyLocalesPlugin } from './plugins/CopyLocalesPlugin';
 import { CopyManifestPlugin } from './plugins/CopyManifestPlugin';
 import { CopyPngHtmlPlugin } from './plugins/CopyPngHtmlPlugin';
 import { CopyPngManifestPlugin } from './plugins/CopyPngManifestPlugin';
@@ -106,6 +107,7 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
     CopyManifestPlugin(isDevelopment),
     CopyCssManifestPlugin(isDevelopment),
     CopyHtmlPlugin(isDevelopment),
+    CopyLocalesPlugin(isDevelopment),
     CopyPngManifestPlugin(isDevelopment),
     CopyPngHtmlPlugin(isDevelopment),
     CopyWebAccessibleResourcesPlugin(isDevelopment),
