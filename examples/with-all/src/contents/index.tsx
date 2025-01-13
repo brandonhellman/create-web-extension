@@ -15,7 +15,7 @@ function App() {
     <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-50">
       <div className="rounded bg-white p-4">
         <p className="text-gray-500">Count: {count}</p>
-        <div className="flex flx-row gap-2">
+        <div className="flex-row flex gap-2">
           <button
             className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
             onClick={() => setCount((prev) => prev + 1)}
