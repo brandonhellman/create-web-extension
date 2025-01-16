@@ -1,19 +1,13 @@
-import { z } from 'zod';
+import { router } from '../trpc';
+import { apiRouter, ApiRouter } from './api/apiRouter';
+import { userRouter, UserRouter } from './user/userRouter';
 
-import { procedure, router } from '../trpc';
-
-export const appRouter = router({
-  hello: procedure
-    .input(
-      z.object({
-        text: z.string(),
-      }),
-    )
-    .query((opts) => {
-      return {
-        greeting: `hello ${opts.input.text}`,
-      };
-    }),
+export const appRouter = router<{
+  api: ApiRouter;
+  user: UserRouter;
+}>({
+  api: apiRouter,
+  user: userRouter,
 });
 
 // export type definition of API
