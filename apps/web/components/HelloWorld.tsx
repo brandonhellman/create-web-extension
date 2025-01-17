@@ -1,7 +1,9 @@
 import { trpc } from '../utils/trpc';
 
 export function HelloWorld() {
-  const hello = trpc.hello.useQuery({ text: 'client' });
+  const hello = trpc.user.selectUser.useQuery({
+    userId: '1',
+  });
 
   if (!hello.data) {
     return <div>Loading...</div>;
@@ -9,7 +11,7 @@ export function HelloWorld() {
 
   return (
     <div>
-      <p>{hello.data.greeting}</p>
+      <p>{hello.data.id}</p>
     </div>
   );
 }

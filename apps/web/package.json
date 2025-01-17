@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "supabase": "supabase gen types typescript --project-id gbdvgggfeaqubiuavtds --schema public > supabase/index.types.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.64.1",
@@ -18,6 +19,7 @@
     "nextra-theme-docs": "^3.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "trpc-to-openapi": "^2.1.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
