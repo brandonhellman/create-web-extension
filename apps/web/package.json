@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "supabase": "supabase gen types typescript --project-id gbdvgggfeaqubiuavtds --schema public > supabase/index.types.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.64.1",

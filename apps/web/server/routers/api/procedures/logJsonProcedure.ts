@@ -1,8 +1,9 @@
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { logProcedure } from '../../../trpc';
 
-export const LogJsonInput = z.object({});
+export const LogJsonInput = z.object({}).passthrough();
 
 export type LogJsonInputType = z.infer<typeof LogJsonInput>;
 
@@ -21,7 +22,19 @@ export const logJsonProcedure = logProcedure
   })
   .input(LogJsonInput)
   .output(LogJsonOutput)
-  .query((opts) => {
+  .query(async (opts) => {
+    const insertLog = await opts.ctx.supabase.from('logs').insert({
+      projectId: opts.ctx.projectId,
+      json: opts.input as any,
+    });
+
+    if (insertLog.error) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: insertLog.error.message,
+      });
+    }
+
     return {
       success: true,
     };

@@ -1,14 +1,14 @@
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 
+import { supabaseServer } from '../supabase/supabaseServer';
+
 export const createContext = async ({ req, res }: CreateNextContextOptions) => {
-  if (req.headers.authorization) {
-    const userId = req.headers.authorization.split(' ')[1];
-    console.log('userId', userId);
-  }
+  const supabase = supabaseServer();
 
   return {
-    req,
-    res,
+    req: req,
+    res: res,
+    supabase: supabase,
   };
 };
 
