@@ -13,6 +13,7 @@ const t = initTRPC.meta<OpenApiMeta>().context<Context>().create();
 export const router = t.router;
 export const procedure = t.procedure;
 
+// Custom procedures
 export const logProcedure = t.procedure.use(async (opts) => {
   const authorization = opts.ctx.req.headers.authorization;
   const bearer = authorization?.split(' ')[1];
