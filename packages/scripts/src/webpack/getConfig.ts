@@ -1,4 +1,4 @@
-import webpack from 'webpack';
+import webpack, { DefinePlugin } from 'webpack';
 
 import { pathToBrowserExt } from '../utils/pathToBrowserExt';
 import { CopyCssManifestPlugin } from './plugins/CopyCssManifestPlugin';
@@ -104,6 +104,9 @@ export function getConfig(options: ConfigOptionsDevelopment | ConfigOptionsProdu
   };
 
   const basePlugins = [
+    new DefinePlugin({
+      'process.env': JSON.stringify(process.env),
+    }),
     CopyManifestPlugin(isDevelopment),
     CopyCssManifestPlugin(isDevelopment),
     CopyHtmlPlugin(isDevelopment),
