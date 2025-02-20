@@ -1,14 +1,16 @@
 import { router } from '../trpc';
-import { apiRouter, ApiRouter } from './api/apiRouter';
-import { userRouter, UserRouter } from './user/userRouter';
+import { apiRouter, type ApiRouter } from './api/apiRouter';
+import { upcellRouter, type UpcellRouter } from './upcell/upcellRouter';
+import { userRouter, type UserRouter } from './user/userRouter';
 
 export const appRouter = router<{
   api: ApiRouter;
+  upcell: UpcellRouter;
   user: UserRouter;
 }>({
   api: apiRouter,
+  upcell: upcellRouter,
   user: userRouter,
 });
 
-// export type definition of API
 export type AppRouter = typeof appRouter;
